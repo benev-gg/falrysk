@@ -36,9 +36,7 @@ export default template(import.meta.url, async orb => html`
 			})}
 		</head>
 		<body>
-			<benev-menu>
-				<p>this is the benev menu</p>
-			</benev-menu>
+			<benev-menu></benev-menu>
 
 			<benev-header>
 				${topNav("games")}

@@ -6,7 +6,7 @@ import {hashNav, watchHash, router} from "@e280/sly"
 import {Basis} from "../types.js"
 import {RenderZone} from "./render-zone.js"
 
-export function setupNavigation({menu, header, loader, getBasis}: {
+export function setupNavigation({header, loader, getBasis}: {
 		menu: RenderZone
 		header: RenderZone
 		loader: Loader
@@ -27,7 +27,7 @@ export function setupNavigation({menu, header, loader, getBasis}: {
 		"": async() => {
 			if (runs === 1) return
 			await loader.load(loading, async() => {
-				menu.reset()
+				// menu.reset()
 				header.render(null)
 				return Array.from(loader.original.content.cloneNode(true).childNodes)
 			}).then(() => header.reset())
