@@ -1,0 +1,55 @@
+{
+	"private": true,
+	"name": "@benev/falrysk",
+	"version": "0.1.0-0",
+	"description": "a world of great wonders, and great dangers",
+	"license": "MIT",
+	"type": "module",
+	"main": "./x/index.js",
+	"files": [
+		"x",
+		"s"
+	],
+	"scripts": {
+		"link": "npm link ../tact ../math ../archimedes ../web",
+		"link-assets": "ln -s /mnt/benev-storage/falrysk/assets assets",
+		"build": "rm -rf x && mkdir x x/client && ln -s ../../assets x/client/assets && tsc && scute --in=s/client --out=x/client --splitting=yes -v",
+		"dev": "octo 'tsc -w' 'node --watch x/test.js' 'scute --in=s/client --out=x/client --also-watch=node_modules,x/lib --splitting=yes -vw' 'hottie x/client --debounce=700'",
+		"test": "node x/test.js",
+		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +"
+	},
+	"allowScripts": {
+		"esbuild@0.28.2": true
+	},
+	"dependencies": {
+		"@babylonjs/lite": "^1.26.0",
+		"@benev/archimedes": "0.1.0-9",
+		"@benev/math": "0.4.0-2",
+		"@benev/tact": "0.3.0-3",
+		"@benev/web": "0.1.0-4",
+		"@e280/shiny": "0.1.0-22",
+		"@e280/sly": "^0.4.6",
+		"@e280/strata": "^0.4.4",
+		"@e280/stz": "^0.3.10",
+		"lit": "^3.3.3"
+	},
+	"devDependencies": {
+		"@e280/hottie": "^0.1.5",
+		"@e280/octo": "^0.1.5",
+		"@e280/science": "^0.1.12",
+		"@e280/scute": "^0.5.2",
+		"typescript": "^7.0.2"
+	},
+	"author": "Chase Moskal <chasemoskal@gmail.com>",
+	"homepage": "https://github.com/benev-gg/falrysk#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/benev-gg/falrysk.git"
+	},
+	"bugs": {
+		"url": "https://github.com/benev-gg/falrysk/issues"
+	},
+	"keywords": [
+		"web game"
+	]
+}
