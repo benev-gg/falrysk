@@ -25,7 +25,7 @@ export const Play = () => shadowElement(() => {
 			@dragleave=${drops.dragleave}
 			@drop=${drops.drop}>
 
-			<div class=coming-soon>coming soon</div>
+			<div class=coming-soon>coming soon lol</div>
 		</div>
 	`
 })

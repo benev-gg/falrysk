@@ -48,8 +48,7 @@ export default template(import.meta.url, async orb => html`
 				<main style="${`--bg-url: url('${asset("bg.webp")}')`}">
 					<section class=plate benev-slice>
 						<header>
-							<h1><img alt="" src="${asset("favicon.png")}"/></h1>
-							<p class=subtitle>falrysk</p>
+							<h1>falrysk</h1>
 							<p class=version>v${orb.packageVersion()}</p>
 						</header>
 						<a benev-button=juicy href="/#/play">new game</a>
