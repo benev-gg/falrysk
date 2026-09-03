@@ -49,7 +49,7 @@ export default template(import.meta.url, async orb => html`
 							<h1>falrysk</h1>
 							<p class=version>v${orb.packageVersion()}</p>
 						</header>
-						<a benev-button=juicy href="/#/play">new game</a>
+						<a benev-button=juicy href="./#/play">new game</a>
 					</section>
 
 					<benev-footer>
