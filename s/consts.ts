@@ -5,8 +5,8 @@ export const consts = deep.freeze({
 	simulationHz: {min: 10, max: 30},
 	assets: {
 		local: "/assets",
-		origin: "https://benev-storage.sfo2.digitaloceanspaces.com/falrysk/assets",
-		cdn: "https://benev-storage.sfo2.cdn.digitaloceanspaces.com/falrysk/assets",
+		origin: "https://benev-space.tor1.digitaloceanspaces.com/falrysk/assets",
+		cdn: "https://benev-space.tor1.cdn.digitaloceanspaces.com/falrysk/assets",
 	},
 })
 
