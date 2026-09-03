@@ -11,6 +11,7 @@
 		"s"
 	],
 	"scripts": {
+		"start": "node x/server/server.js",
 		"link": "npm link ../tact ../math ../archimedes ../web",
 		"link-assets": "ln -s /mnt/benev-storage/falrysk/assets assets",
 		"build": "rm -rf x && mkdir x x/client && ln -s ../../assets x/client/assets && tsc && scute --in=s/client --out=x/client --splitting=yes -v",
@@ -31,6 +32,8 @@
 		"@e280/sly": "^0.4.6",
 		"@e280/strata": "^0.4.4",
 		"@e280/stz": "^0.3.10",
+		"compression": "^1.8.1",
+		"express": "^5.2.1",
 		"lit": "^3.3.3"
 	},
 	"devDependencies": {
@@ -38,6 +41,8 @@
 		"@e280/octo": "^0.1.5",
 		"@e280/science": "^0.1.12",
 		"@e280/scute": "^0.5.2",
+		"@types/compression": "^1.8.1",
+		"@types/express": "^5.0.6",
 		"typescript": "^7.0.2"
 	},
 	"author": "Chase Moskal <chasemoskal@gmail.com>",
