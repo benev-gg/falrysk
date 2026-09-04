@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "@benev/falrysk",
-	"version": "0.1.0-2",
+	"version": "0.1.0-3",
 	"description": "a world of great wonders, and great dangers",
 	"license": "MIT",
 	"type": "module",
