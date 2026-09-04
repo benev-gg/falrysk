@@ -26,11 +26,9 @@ export function setupNavigation({header, loader, getBasis}: {
 	const route = router({
 		"": async() => {
 			if (runs === 1) return
-			await loader.load(loading, async() => {
-				// menu.reset()
-				header.render(null)
-				return Array.from(loader.original.content.cloneNode(true).childNodes)
-			}).then(() => header.reset())
+			header.render(null)
+			await loader.reset(loading)
+			header.reset()
 		},
 
 		"play": async() => {
