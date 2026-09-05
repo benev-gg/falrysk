@@ -2,6 +2,7 @@
 import {deep} from "@e280/stz"
 
 export const consts = deep.freeze({
+	base: "https://benev.gg/falrysk",
 	simulationHz: {min: 10, max: 30},
 	assets: {
 		local: "/assets",

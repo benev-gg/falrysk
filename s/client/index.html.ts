@@ -1,7 +1,9 @@
 
-import {benevCssText, topNav} from "@benev/web/ssg"
+import {benevCssText, benevNav} from "@benev/web/ssg"
 import {template, html, socialCard} from "@e280/scute"
 import {asset} from "../assets.js"
+import {consts} from "../consts.js"
+import {canonicalUrl} from "../lib/ssg/canonical-url.js"
 
 export default template(import.meta.url, async orb => html`
 	<!doctype html>
@@ -14,6 +16,15 @@ export default template(import.meta.url, async orb => html`
 			<title>falrysk</title>
 			<link rel="icon" href="${asset("favicon.png")}"/>
 			<script type="module" src="${orb.hashurl("main.bundle.min.js")}"></script>
+
+			${socialCard({
+				title: "falrysk",
+				description: "anything could happen",
+				themeColor: "#ff9900",
+				image: asset("favicon.png"),
+				url: canonicalUrl(orb),
+				siteName: consts.base + "/",
+			})}
 
 			<style data-theme>
 				@layer benev, vars, x, app;
@@ -28,18 +39,12 @@ export default template(import.meta.url, async orb => html`
 				${orb.inject("css/x.css")}
 				${orb.inject("css/app.css")}
 			</style>
-
-			${socialCard({
-				title: "falrysk",
-				description: "a world of great wonders, and great dangers",
-				themeColor: "#f90",
-			})}
 		</head>
 		<body>
 			<benev-menu></benev-menu>
 
 			<benev-header>
-				${topNav("games")}
+				${benevNav("games")}
 			</benev-header>
 
 			<benev-loader>

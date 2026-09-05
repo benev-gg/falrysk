@@ -3,7 +3,10 @@ import {deep} from "@e280/stz"
 import {consts} from "./consts.js"
 
 export function asset(path: keyof typeof assets) {
-	return `${consts.assets.origin}/${assets[path]}`
+	const bucket = process.env.BENEV_USE_BUCKET_ORIGIN === "1"
+		? consts.assets.origin
+		: consts.assets.cdn
+	return `${bucket}/${assets[path]}`
 }
 
 export const assets = deep.freeze({
