@@ -7,15 +7,13 @@ import {GameComponents} from "./parts/components.js"
 import {IntentBucketMap} from "./utils/intent-bucket-map.js"
 
 export class Game {
-	pod
+	change
 	simulate
-	entities: Entities<GameComponents> = new Entities<GameComponents>()
-	change: Change<GameComponents> = new Change<GameComponents>(delta => applyDelta(this.entities, delta))
 
 	constructor(players: IntentBucketMap | null) {
-		const change = new Change(delta => applyDelta(this.entities, delta))
-		this.pod = new Pod(this.entities.readonly, change, players)
-		this.simulate = systems(this.pod)
+		const entities = new Entities<GameComponents>()
+		this.change = new Change(delta => applyDelta(entities, delta))
+		this.simulate = systems(new Pod(entities.readonly, this.change, players))
 	}
 
 	init() {

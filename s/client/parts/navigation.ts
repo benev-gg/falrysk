@@ -1,9 +1,9 @@
 
-import {html} from "lit"
 import {Loader} from "@benev/web"
 import {effect} from "@e280/strata"
-import {hashNav, watchHash, router} from "@e280/sly"
+import {hashNav, watchHash} from "@e280/sly"
 import {Basis} from "../types.js"
+import {makeRouter} from "../routes.js"
 import {RenderZone} from "./render-zone.js"
 
 export function setupNavigation({header, loader, getBasis}: {
@@ -14,7 +14,6 @@ export function setupNavigation({header, loader, getBasis}: {
 	}) {
 
 	const $hash = watchHash()
-	const loading = () => "loading..."
 
 	const go = hashNav({
 		home: () => ``,
@@ -23,25 +22,11 @@ export function setupNavigation({header, loader, getBasis}: {
 
 	let runs = 0
 
-	const route = router({
-		"": async() => {
-			if (runs === 1) return
-			header.render(null)
-			await loader.reset(loading)
-			header.reset()
-		},
-
-		"play": async() => {
-			await loader.load(loading, async() => {
-				header.render(null)
-				const [basis, mod] = await Promise.all([
-					getBasis(),
-					import("./register-play.js"),
-				])
-				await mod.default(basis)
-				return html`<game-play></game-play>`
-			})
-		},
+	const route = makeRouter({
+		header,
+		loader,
+		getBasis,
+		getRunCount: () => runs,
 	})
 
 	effect(() => {

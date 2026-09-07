@@ -1,12 +1,15 @@
 
 import {html} from "lit"
-import {loot, shadowElement, useCss, useOnce} from "@e280/sly"
+import {loot, shadow, useCss, useOnce} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {themeCss} from "../../utils/theme.js"
+// import {Game} from "../../../game/simulation/game.js"
 
-export const Play = () => shadowElement(() => {
+export const Play = shadow(() => {
 	useCss(themeCss, styleCss)
+
+	// const game = useOnce(() => new Game())
 
 	const drops = useOnce(() => new loot.Drops({
 		predicate: loot.hasFiles,
