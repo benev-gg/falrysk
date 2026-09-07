@@ -1,7 +1,7 @@
 
 import {addToScene, createEngine, createHemisphericLight, createSceneContext, disposeEngine, disposeScene, loadGltf} from "@babylonjs/lite"
-import {AnyCanvas} from "../../buddy/types.js"
-import {AssetDepot} from "../../buddy/depot.js"
+import {AnyCanvas} from "../../../lib/buddy/types.js"
+import {AssetDepot} from "../../../lib/buddy/depot.js"
 
 export type Venue = Awaited<ReturnType<typeof makeVenue>>
 

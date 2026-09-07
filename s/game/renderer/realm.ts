@@ -4,9 +4,9 @@ import {Vec2} from "@benev/math"
 import {EntitiesReadonly} from "@benev/archimedes"
 
 import {Venue} from "./parts/venue.js"
-import {Timing} from "../tools/timing.js"
-import {PlayerId} from "../game/types.js"
-import {GameComponents} from "../game/parts/components.js"
+import {PlayerId} from "../simulation/types.js"
+import {Timing} from "../../lib/tools/timing.js"
+import {GameComponents} from "../simulation/parts/components.js"
 
 export class Realm {
 	venue

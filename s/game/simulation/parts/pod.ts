@@ -6,9 +6,9 @@ import {Change, EntitiesReadonly, Id} from "@benev/archimedes"
 import {Phys} from "../utils/phys.js"
 import {consts} from "../../../consts.js"
 import {ActorMap} from "../utils/actor.js"
-import {Timing} from "../../tools/timing.js"
+import {Timing} from "../../../lib/tools/timing.js"
 import {GameComponents} from "./components.js"
-import {Physics} from "../../physics/physics.js"
+import {Physics} from "../../../lib/physics/physics.js"
 import {IntentBucketMap} from "../utils/intent-bucket-map.js"
 
 export class Pod {

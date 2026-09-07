@@ -4,8 +4,8 @@ import {EntitiesReadonly} from "@benev/archimedes"
 import {Venue} from "./venue.js"
 import {Realm} from "../realm.js"
 import {setupRender} from "../render.js"
-import {PlayerId} from "../../game/types.js"
-import {GameComponents} from "../../game/parts/components.js"
+import {PlayerId} from "../../simulation/types.js"
+import {GameComponents} from "../../simulation/parts/components.js"
 
 export type Stage = ReturnType<typeof makeStage>
 
