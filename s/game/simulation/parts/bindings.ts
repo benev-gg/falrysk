@@ -2,32 +2,19 @@
 import {asBindings} from "@benev/tact"
 
 export const bindings = asBindings({
-	meta: {
-		menu: "KeyT",
-		edtoggle: "Tab",
-	},
+	amble: {
+		use: "KeyE",
+		sprint: "ShiftLeft",
 
-	spectator: {
-		spawn: "keyboard.any",
-	},
+		move_forward: "KeyW",
+		move_backward: "KeyS",
+		move_leftward: "KeyA",
+		move_rightward: "KeyD",
 
-	robot: {
-		use: "KeyF",
-		action1: ["or", "pointer.button.left", "Space"],
-		action2: ["or", "pointer.button.right", "Semicolon"],
-		action3: "KeyE",
-		action4: "KeyQ",
-
-		boost: "ShiftLeft",
-		move_up: "KeyW",
-		move_down: "KeyS",
-		move_left: "KeyA",
-		move_right: "KeyD",
-
-		look_up: "KeyI",
-		look_down: "KeyK",
-		look_left: "KeyJ",
-		look_right: "KeyL",
+		look_up: ["or", "KeyI", "pointer.move.up"],
+		look_down: ["or", "KeyK", "pointer.move.down"],
+		look_left: ["or", "KeyJ", "pointer.move.left"],
+		look_right: ["or", "KeyL", "pointer.move.right"],
 	},
 })
 

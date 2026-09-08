@@ -6,27 +6,14 @@ export const stockProfiles = {
 	standard: {label: "📜standard", bindings},
 
 	xinput: {label: "🎮xinput", bindings: asBindings<typeof bindings>({
-		meta: {
-			menu: ["or", "gamepad.button.10", "KeyT", "Esc"],
-			edtoggle: "Tab",
-		},
-
-		spectator: {
-			spawn: "gamepad.button.any",
-		},
-
-		robot: {
+		amble: {
 			use: "gamepad.button.3",
-			action1: "gamepad.axis.7.neg",
-			action2: "gamepad.axis.8.neg",
-			action3: "gamepad.button.6",
-			action4: "gamepad.button.5",
+			sprint: ["or", "gamepad.button.11", "gamepad.button.4"],
 
-			boost: ["or", "gamepad.button.11", "gamepad.button.4"],
-			move_up: "gamepad.axis.2.pos",
-			move_down: "gamepad.axis.2.neg",
-			move_left: "gamepad.axis.1.pos",
-			move_right: "gamepad.axis.1.neg",
+			move_forward: "gamepad.axis.2.pos",
+			move_backward: "gamepad.axis.2.neg",
+			move_leftward: "gamepad.axis.1.pos",
+			move_rightward: "gamepad.axis.1.neg",
 
 			look_up: "gamepad.axis.6.pos",
 			look_down: "gamepad.axis.6.neg",
@@ -36,27 +23,14 @@ export const stockProfiles = {
 	})},
 
 	micro: {label: "🦠micro", bindings: asBindings<typeof bindings>({
-		meta: {
-			menu: ["or", "gamepad.button.6", "KeyT", "Esc"],
-			edtoggle: "Tab",
-		},
-
-		spectator: {
-			spawn: "gamepad.button.any",
-		},
-
-		robot: {
+		amble: {
 			use: "gamepad.button.3",
-			action1: "gamepad.axis.7.neg",
-			action2: "gamepad.axis.8.neg",
-			action3: "gamepad.button.6",
-			action4: "gamepad.button.5",
+			sprint: ["or", "gamepad.button.11", "gamepad.button.4"],
 
-			boost: ["or", "gamepad.button.11", "gamepad.button.4"],
-			move_up: "gamepad.axis.2.pos",
-			move_down: "gamepad.axis.2.neg",
-			move_left: "gamepad.axis.1.pos",
-			move_right: "gamepad.axis.1.neg",
+			move_forward: "gamepad.axis.2.pos",
+			move_backward: "gamepad.axis.2.neg",
+			move_leftward: "gamepad.axis.1.pos",
+			move_rightward: "gamepad.axis.1.neg",
 
 			look_up: "null",
 			look_down: "null",
