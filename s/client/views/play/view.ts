@@ -3,7 +3,7 @@ import {html} from "lit"
 import {loot, shadow, useCss, useOnce} from "@e280/sly"
 
 import styleCss from "./style.css.js"
-import {themeCss} from "../../utils/theme.js"
+import {themeCss} from "../../../lib/web/theme.js"
 // import {Game} from "../../../game/simulation/game.js"
 
 export const Play = shadow(() => {

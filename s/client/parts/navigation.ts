@@ -1,18 +1,10 @@
 
-import {Loader} from "@benev/web"
 import {effect} from "@e280/strata"
 import {hashNav, watchHash} from "@e280/sly"
 import {Basis} from "../types.js"
 import {makeRouter} from "../routes.js"
-import {RenderZone} from "./render-zone.js"
 
-export function setupNavigation({header, loader, getBasis}: {
-		menu: RenderZone
-		header: RenderZone
-		loader: Loader
-		getBasis: () => Promise<Basis>
-	}) {
-
+export function setupNavigation(basis: Basis) {
 	const $hash = watchHash()
 
 	const go = hashNav({
@@ -23,9 +15,7 @@ export function setupNavigation({header, loader, getBasis}: {
 	let runs = 0
 
 	const route = makeRouter({
-		header,
-		loader,
-		getBasis,
+		basis,
 		getRunCount: () => runs,
 	})
 

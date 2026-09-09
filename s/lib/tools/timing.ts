@@ -13,8 +13,8 @@ export class Timing {
 			minHz = 10,
 			maxHz = 120,
 		) {
-		this.#minDelta = 1000 / minHz
-		this.#maxDelta = 1000 / maxHz
+		this.#minDelta = 1000 / maxHz
+		this.#maxDelta = 1000 / minHz
 		this.#delta = this.#maxDelta
 	}
 

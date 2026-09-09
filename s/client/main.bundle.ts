@@ -1,36 +1,34 @@
 
 import {html} from "lit"
 import {dom} from "@e280/sly"
-import {once} from "@e280/stz"
+import {DeskView} from "@benev/tact/ui"
 import {Loader, setupBenev} from "@benev/web"
 
-import {Basis} from "./types.js"
-import {setupDeck} from "./parts/setup-deck.js"
-import {RenderZone} from "./parts/render-zone.js"
+import {Satchel} from "../lib/web/satchel.js"
+import {RenderZone} from "../lib/web/render-zone.js"
 import {setupNavigation} from "./parts/navigation.js"
+import {setupDeck} from "./parts/inputs/setup-deck.js"
 
 const benev = await setupBenev()
 dom.register(benev.elements)
+
+const satchel = new Satchel("falrysk")
+const {deck, getControllerLabel} = setupDeck(satchel.kv.cell("deck"))
 
 const benevMenu = new RenderZone(dom("benev-menu"))
 const benevHeader = new RenderZone(dom("benev-header"))
 const benevLoader = new Loader(dom("benev-loader"))
 
-const deckSetup = setupDeck()
-
 benevMenu.render(html`
 	<benev-account></benev-account>
-	${deckSetup.renderDesk()}
+	${DeskView(deck, {getControllerLabel})}
 `)
 
 setupNavigation({
-	menu: benevMenu,
-	header: benevHeader,
-	loader: benevLoader,
-	getBasis: once(async() => (<Basis>{
-		deckSetup,
-		benevMenu,
-		benevHeader,
-	})),
+	benevMenu,
+	benevHeader,
+	benevLoader,
+	deck,
+	getControllerLabel,
 })
 

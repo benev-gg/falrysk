@@ -1,19 +1,18 @@
 
 import {Content} from "@e280/sly"
-import {DeskView} from "@benev/tact/ui"
-import {LocalStore} from "@e280/strata"
+import {Cubby} from "@e280/strata"
 import {Controller, Deck, DeckState, Devices, GamepadDevice, KeyboardDevice, onPad, PointerDevice} from "@benev/tact"
 
 import {stockProfiles} from "./stock-profiles.js"
+import {onStorageEvent} from "../../../lib/web/on-storage-event.js"
 
 export type GameDeck = ReturnType<typeof setupDeck>["deck"]
 
-export function setupDeck() {
-	const store = new LocalStore<DeckState>("tactDeck")
+export function setupDeck(store: Cubby<DeckState>) {
 	const deck = new Deck({store, stockProfiles})
 
 	deck.load()
-	store.onStorageEvent(() => deck.load())
+	onStorageEvent(() => deck.load())
 
 	const port = deck.createPort()
 	const controller = deck.createController("primary", "standard", new Devices(
@@ -23,27 +22,25 @@ export function setupDeck() {
 
 	port.plug(controller)
 
-	const labels = new Map<Controller, Content>()
+	const controllerLabels = new Map<Controller, Content>()
 		.set(controller, "⌨️🖱keyboard+mouse")
 
 	onPad(pad => {
 		const handle = `(${pad.gamepad.index + 1}) ${pad.gamepad.id}`
 		const controller = deck.createController(handle, "xinput", new GamepadDevice(pad))
-		labels.set(controller, `🎮${handle}`)
-
-		// // TODO decide if gamepads should autospawn their own ports
-		// const port = deck.createPort()
+		controllerLabels.set(controller, `🎮${handle}`)
 		port.plug(controller)
 
 		return () => {
-			deck.deletePort(port)
+			port.unplug(controller)
 			deck.deleteController(controller)
 		}
 	})
 
-	const getControllerLabel = labels.get.bind(labels)
-	const renderDesk = () => DeskView(deck, {getControllerLabel})
+	function getControllerLabel(controller: Controller) {
+		return controllerLabels.get(controller)
+	}
 
-	return {deck, renderDesk}
+	return {deck, getControllerLabel}
 }
 

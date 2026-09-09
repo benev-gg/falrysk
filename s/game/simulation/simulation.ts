@@ -6,7 +6,7 @@ import {systems} from "./systems.js"
 import {GameComponents} from "./parts/components.js"
 import {IntentBucketMap} from "./utils/intent-bucket-map.js"
 
-export class Game {
+export class Simulation {
 	change
 	simulate
 
