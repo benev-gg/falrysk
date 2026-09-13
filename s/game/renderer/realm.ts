@@ -1,46 +1,36 @@
 
-import {ev} from "@e280/stz"
 import {Vec2} from "@benev/math"
+import {disposer, ev} from "@e280/stz"
 import {EntitiesReadonly} from "@benev/archimedes"
+import {addToScene, createHemisphericLight, EngineContext, SceneContext} from "@babylonjs/lite"
 
-import {Venue} from "./parts/venue.js"
 import {PlayerId} from "../simulation/types.js"
 import {Timing} from "../../lib/tools/timing.js"
 import {GameComponents} from "../simulation/parts/components.js"
 
 export class Realm {
-	venue
-	entities
-	playerId
-
 	pointer = new Vec2()
-	timing = new Timing(10, 240)
+	timing = new Timing()
+	dispose = disposer()
 
-	#stopPointerListening
-
-	constructor(options: {
-			venue: Venue
-			entities: EntitiesReadonly<GameComponents>
+	constructor(public venue: {
+			canvas: HTMLCanvasElement
+			engine: EngineContext
+			scene: SceneContext
 			playerId: PlayerId
+			entities: EntitiesReadonly<GameComponents>
 		}) {
 
-		const {canvas} = options.venue
+		const light = createHemisphericLight([.012, 1, .023], 1)
+		addToScene(venue.scene, light)
 
-		this.venue = options.venue
-		this.entities = options.entities
-		this.playerId = options.playerId
-
-		this.#stopPointerListening = ev(canvas, {
+		this.dispose.schedule(ev(venue.canvas, {
 			pointermove: ({clientX, clientY}: PointerEvent) => {
-				const {width, height} = canvas.getBoundingClientRect()
+				const {width, height} = venue.canvas.getBoundingClientRect()
 				this.pointer.x = clientX / width
 				this.pointer.y = clientY / height
 			},
-		})
-	}
-
-	dispose() {
-		this.#stopPointerListening()
+		}))
 	}
 }
 
