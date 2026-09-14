@@ -1,15 +1,27 @@
 
 import {html} from "lit"
-import {loot, shadow, useCss, useOnce} from "@e280/sly"
+import {loot, shadow, useCss, useMount, useOnce, useSignal} from "@e280/sly"
 
+import {Basis} from "../../types.js"
 import styleCss from "./style.css.js"
+import {consts} from "../../../consts.js"
 import {themeCss} from "../../../lib/web/theme.js"
-// import {Game} from "../../../game/simulation/game.js"
+import {smartCycle} from "../../../lib/tools/smart-cycle.js"
+import {LocalPlayers} from "../../parts/inputs/local-players.js"
+import {Simulation} from "../../../game/simulation/simulation.js"
 
-export const Play = shadow(() => {
+export const Play = shadow((basis: Basis) => {
 	useCss(themeCss, styleCss)
 
-	// const game = useOnce(() => new Game())
+	const players = useOnce(() => new LocalPlayers())
+	const simulation = useOnce(() => new Simulation())
+	const playing = useSignal(true)
+
+	useMount(() => smartCycle(consts.simulationHz.max, 3, async() => {
+		if (!playing()) return
+		const actions = players.update(performance.now(), basis.deck.ports)
+		simulation.simulate(actions)
+	}))
 
 	const drops = useOnce(() => new loot.Drops({
 		predicate: loot.hasFiles,
