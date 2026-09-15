@@ -15,7 +15,7 @@
 		"link": "npm link ../tact ../math ../archimedes ../web",
 		"link-assets": "ln -s /mnt/benev-storage/falrysk/assets assets",
 		"build": "rm -rf x && mkdir x x/client && ln -s ../../assets x/client/assets && tsc && scute --in=s/client --out=x/client --splitting=yes -v",
-		"dev": "octo 'tsc -w' 'node --watch x/test.js' 'BENEV_USE_BUCKET_ORIGIN=1 scute --in=s/client --out=x/client --also-watch=node_modules,x/lib --splitting=yes -vw' 'hottie x/client --debounce=700'",
+		"dev": "octo 'tsc -w' 'node --watch x/test.js' 'BENEV_USE_BUCKET_ORIGIN=1 scute --in=s/client --out=x/client --also-watch=node_modules,x/lib,x/game --splitting=yes -vw' 'hottie x/client --debounce=700'",
 		"test": "node x/test.js",
 		"count": "find s -path '*/_archive' -prune -o -name '*.ts' -exec wc -l {} +"
 	},
