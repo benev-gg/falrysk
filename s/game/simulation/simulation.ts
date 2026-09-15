@@ -9,16 +9,11 @@ import {bindings} from "./parts/bindings.js"
 import {GameComponents} from "./parts/components.js"
 
 export class Simulation {
-	change
-	#pod
-	#runSystems
+	entities = new Entities<GameComponents>()
+	change = new Change(delta => applyDelta(this.entities, delta))
 
-	constructor() {
-		const entities = new Entities<GameComponents>()
-		this.change = new Change(delta => applyDelta(entities, delta))
-		this.#pod = new Pod(entities.readonly, this.change)
-		this.#runSystems = systems(this.#pod)
-	}
+	#pod = new Pod(this.entities.readonly, this.change)
+	#runSystems = systems(this.#pod)
 
 	simulate(actions: Map<PlayerId, Actions<typeof bindings>>) {
 		this.#pod.actions = actions
