@@ -23,7 +23,7 @@
 		"esbuild@0.28.2": true
 	},
 	"dependencies": {
-		"@babylonjs/lite": "^1.28.0",
+		"@babylonjs/lite": "^1.30.0",
 		"@benev/archimedes": "0.1.0-9",
 		"@benev/math": "0.4.0-2",
 		"@benev/tact": "0.3.0-3",
