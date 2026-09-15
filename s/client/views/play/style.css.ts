@@ -10,31 +10,17 @@ export default css`
 
 .shell {
 	display: flex;
+	width: 100%;
 	height: 100%;
 	gap: 0.2em;
 }
 
-.perspective {
-	position: relative;
-	flex: 1 1 0;
-
-	&[data-drop]::before {
-		pointer-events: none;
-		content: "";
-		display: block;
-		z-index: 1;
-		position: absolute;
-		inset: 0;
-		background: #0ff4;
-		border: 0.5em dashed #fff;
-	}
-}
-
 canvas {
 	display: block;
-	width: 100%;
-	height: 100%;
+	flex: 1 1 0;
 	background: #000;
+	min-width: 0;
+	min-height: 0;
 
 	&:focus {
 		outline: none;

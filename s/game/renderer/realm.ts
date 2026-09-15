@@ -2,7 +2,7 @@
 import {Vec2} from "@benev/math"
 import {disposer, ev} from "@e280/stz"
 import {EntitiesReadonly} from "@benev/archimedes"
-import {addToScene, createBox, createHemisphericLight, EngineContext, SceneContext} from "@babylonjs/lite"
+import {addToScene, createBox, createHemisphericLight, createStandardMaterial, EngineContext, registerScene, SceneContext} from "@babylonjs/lite"
 
 import {Gimbal} from "./parts/gimbal.js"
 import {PlayerId} from "../simulation/types.js"
@@ -25,14 +25,20 @@ export class Realm {
 
 		const {canvas, engine, scene} = venue
 
-		const light = createHemisphericLight([.012, 1, .023], 1)
+		scene.clearColor = {r: 0, b: 0, g: 0, a: 1}
+		const light = createHemisphericLight([.123, 1, .234], 1)
 		addToScene(scene, light)
 
-		this.gimbal.radius = 5
 		scene.camera = this.gimbal.camera
 
+		const material = createStandardMaterial()
+		material.diffuseColor = [.8, .5, 0]
+
 		const box = createBox(engine, {size: 1})
+		box.material = material
 		addToScene(scene, box)
+
+		registerScene(scene)
 
 		this.dispose.schedule(ev(canvas, {
 			pointermove: ({clientX, clientY}: PointerEvent) => {

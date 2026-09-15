@@ -8,6 +8,7 @@ export class Timing {
 	#delta
 	#minDelta
 	#maxDelta
+	#elapsed = 0
 
 	constructor(
 			minHz = 10,
@@ -23,6 +24,7 @@ export class Timing {
 		const now = performance.now()
 		this.#delta = clamp(now - this.#previous, this.#minDelta, this.#maxDelta)
 		this.#previous = now
+		this.#elapsed += this.#delta
 	}
 
 	get tick() {
@@ -35,6 +37,10 @@ export class Timing {
 
 	get deltaSeconds() {
 		return this.#delta / 1000
+	}
+
+	get elapsed() {
+		return this.#elapsed
 	}
 }
 
