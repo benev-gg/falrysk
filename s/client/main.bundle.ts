@@ -3,12 +3,14 @@ import {html} from "lit"
 import {dom} from "@e280/sly"
 import {DeskView} from "@benev/tact/ui"
 import {Loader, setupBenev} from "@benev/web"
+import {enableErrorDecoding} from "@babylonjs/lite"
 
 import {Satchel} from "../lib/web/satchel.js"
 import {RenderZone} from "../lib/web/render-zone.js"
 import {setupNavigation} from "./parts/navigation.js"
 import {setupDeck} from "./parts/inputs/setup-deck.js"
 
+enableErrorDecoding()
 const benev = await setupBenev()
 dom.register(benev.elements)
 

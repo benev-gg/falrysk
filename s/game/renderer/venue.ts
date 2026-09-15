@@ -13,7 +13,10 @@ export async function setupVenue({playerId, entities}: {
 	}) {
 
 	const canvas = document.createElement("canvas")
-	const engine = await createEngine(canvas, {useFloatingOrigin: true})
+	const engine = await createEngine(canvas, {
+		useFloatingOrigin: true,
+		useHighPrecisionMatrix: true,
+	})
 	const scene = createSceneContext(engine)
 
 	const dispose = () => {
