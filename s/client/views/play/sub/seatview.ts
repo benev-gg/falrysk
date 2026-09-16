@@ -1,5 +1,6 @@
+
 import {html} from "lit"
-import {light, loot, spinner, useOnce} from "@e280/sly"
+import {earthSpinner, light, loot, useOnce} from "@e280/sly"
 
 import {Viewport} from "./viewport.js"
 import {Seat} from "../../../parts/director.js"
@@ -25,7 +26,7 @@ export const Seatview = light((seat: Seat) => {
 			@dragleave=${drops.dragleave}
 			@drop=${drops.drop}>
 
-			${spinner(seat.$waiter()(), projector => Viewport(projector.realm))}
+			${earthSpinner(seat.$waiter()(), projector => Viewport(projector.realm))}
 		</div>
 	`
 })

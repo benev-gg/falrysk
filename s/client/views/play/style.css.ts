@@ -13,6 +13,15 @@ export default css`
 	width: 100%;
 	height: 100%;
 	gap: 0.2em;
+
+	.noplayers {
+		position: absolute;
+		inset: 0;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 }
 
 .seat {
@@ -28,6 +37,16 @@ export default css`
 		inset: 0;
 		border: 0.25em dashed var(--drop);
 		background: oklch(from var(--drop) l c h / 25%);
+	}
+
+	[view="loading"] {
+		position: absolute;
+		inset: 0;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 2em;
 	}
 }
 

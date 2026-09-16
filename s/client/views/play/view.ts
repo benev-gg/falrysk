@@ -21,7 +21,7 @@ export const Play = (director: Director) => shadow(() => {
 			)}
 
 			${director.seats.size === 0
-				? html`<div class=no-players>please add a player port</div>`
+				? html`<div class=noplayers>you need to connect a player port</div>`
 				: null}
 		</div>
 	`
