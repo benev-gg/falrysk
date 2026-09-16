@@ -1,24 +1,41 @@
 
 import {Actions} from "@benev/tact"
-import {disposer, got} from "@e280/stz"
 import {renderFrame} from "@babylonjs/lite"
+import {disposer, got, gotOk} from "@e280/stz"
 import {EntitiesReadonly} from "@benev/archimedes"
-import {effect, RMap, wait, Waiter} from "@e280/strata"
+import {effect, RMap, signal, Signal, wait, Waiter} from "@e280/strata"
 
 import {Basis} from "../types.js"
 import {consts} from "../../consts.js"
 import {Realm} from "../../game/renderer/realm.js"
 import {LocalPlayers} from "./inputs/local-players.js"
+import {Catalog} from "../../game/renderer/catalog.js"
+import {PlayerId} from "../../game/simulation/types.js"
 import {setupVenue} from "../../game/renderer/venue.js"
 import {setupScene} from "../../game/renderer/scene.js"
-import {PlayerId} from "../../game/simulation/types.js"
-import {setupRender} from "../../game/renderer/render.js"
 import {smartCycle} from "../../lib/tools/smart-cycle.js"
+import {setupRender} from "../../game/renderer/render.js"
 import {Simulation} from "../../game/simulation/simulation.js"
 import {bindings} from "../../game/simulation/parts/bindings.js"
 import {GameComponents} from "../../game/simulation/parts/components.js"
 
-export type Projection = {
+export type Seats = RMap<PlayerId, Seat>
+
+export type Director = {
+	$playing: Signal<boolean>
+	simulation: Simulation
+	seats: Seats
+	dispose: () => void
+}
+
+export type Seat = {
+	playerId: PlayerId
+	$waiter: Signal<Waiter<Projector>>
+	rebuild: (catalog: Catalog) => Promise<void>
+	dispose: () => Promise<void>
+}
+
+export type Projector = {
 	realm: Realm
 	playerId: PlayerId
 	render: (dt: number) => void
@@ -26,78 +43,99 @@ export type Projection = {
 	dispose: () => void
 }
 
-export type Projections = RMap<PlayerId, Waiter<Projection>>
-export type Director = Awaited<ReturnType<typeof startDirector>>
-
-export async function startDirector(basis: Basis) {
+export async function makeDirector(basis: Basis): Promise<Director> {
+	const catalog = new Catalog()
 	const dispose = disposer()
-	const projections: Projections = new RMap()
-
+	const seats = new RMap<PlayerId, Seat>()
 	const simulation = new Simulation()
 	const entities = simulation.entities.readonly
 	const players = new LocalPlayers()
+	const $playing = signal(false)
 
 	// start running the simulation
 	dispose.schedule(
 		smartCycle(consts.simulationHz.max, 3, async() => {
 			players.update(performance.now(), basis.deck.ports)
-			simulation.simulate(players.actions)
+
+			if ($playing())
+				simulation.simulate(players.actions)
 		})
 	)
 
 	// ensure one projection per player
 	dispose.schedule(
 		effect(() => {
-			syncFreshProjections(players, projections, entities)
-			syncStaleProjections(players, projections)
+			syncFreshSeats(players, seats, entities, catalog)
+			syncStaleSeats(players, seats)
 		})
 	)
 
 	// dispose all projections when director is cleaned up
 	dispose.schedule(
-		() => [...projections.values()].map(dumpProjection)
+		() => [...seats.values()].map(seat => seat.dispose())
 	)
 
-	// wait for all active projections to ready up
-	await projectionsReady(projections)
-
-	return {simulation, projections, dispose}
+	players.update(performance.now(), basis.deck.ports)
+	await allProjectorsReady(seats)
+	return {simulation, seats, $playing, dispose}
 }
 
-const syncFreshProjections = (
+function syncFreshSeats(
 		players: LocalPlayers,
-		projections: Projections,
+		seats: Seats,
 		entities: EntitiesReadonly<GameComponents>,
-	) => {
+		catalog: Catalog,
+	) {
 	for (const playerId of players.actions.keys()) {
-		if (!projections.has(playerId))
-			projections.set(playerId, createProjection(playerId, players, entities))
+		if (!seats.has(playerId))
+			seats.set(playerId, makeSeat(playerId, players, entities, catalog))
 	}
 }
 
-const syncStaleProjections = (
+function syncStaleSeats(
 		players: LocalPlayers,
-		projections: Projections,
-	) => {
-	for (const [playerId, waiting] of projections) {
+		seats: Seats,
+	) {
+	for (const [playerId, seat] of seats) {
 		if (!players.actions.has(playerId)) {
-			dumpProjection(waiting)
-			projections.delete(playerId)
+			seat.dispose()
+			seats.delete(playerId)
 		}
 	}
 }
 
-const dumpProjection = (waiting: Waiter<Projection>) => {
-	waiting.result.then(result => result.ok && result.value.dispose())
-}
-
-const createProjection = (
+export function makeSeat(
 		playerId: PlayerId,
 		players: LocalPlayers,
 		entities: EntitiesReadonly<GameComponents>,
-	) => wait(async() => {
+		catalog: Catalog,
+	) {
 
-	const venue = await setupVenue({playerId, entities})
+	const $waiter = signal(wait(makeProjector(playerId, players, entities, catalog)))
+
+	const dispose = async() => {
+		const result = await $waiter().result
+		if (result.ok) return result.value.dispose()
+	}
+
+	const rebuild = async(catalog: Catalog) => {
+		dispose()
+		const w = wait(makeProjector(playerId, players, entities, catalog))
+		$waiter(w)
+		gotOk(await w.result)
+	}
+
+	return {playerId, $waiter, rebuild, dispose}
+}
+
+export async function makeProjector(
+		playerId: PlayerId,
+		players: LocalPlayers,
+		entities: EntitiesReadonly<GameComponents>,
+		catalog: Catalog,
+	) {
+
+	const venue = await setupVenue({playerId, entities, catalog})
 
 	try {
 		const getActions = () => got(players.actions.get(playerId))
@@ -124,45 +162,12 @@ const createProjection = (
 		venue.dispose()
 		throw error
 	}
-})
+}
 
-const projectionsReady = (projections: Projections) => (
-	new Promise<void>((resolve, reject) => {
-		const ready = new WeakSet<Waiter<Projection>>()
-		let done = false
-		let dispose = () => {}
-
-		const check = () => {
-			if (done) return
-			const waiting = [...projections.values()]
-			if (waiting.every(w => ready.has(w))) {
-				done = true
-				dispose()
-				resolve()
-			}
-		}
-
-		dispose = effect(() => {
-			const waiting = [...projections.values()]
-			for (const waiter of waiting) {
-				if (!ready.has(waiter))
-					waiter.result.then(result => {
-						if (done)
-							return
-
-						if (result.ok) {
-							ready.add(waiter)
-							check()
-						}
-						else {
-							done = true
-							dispose()
-							reject(result.error)
-						}
-					})
-			}
-			check()
-		})
-	})
-)
+export async function allProjectorsReady(seats: Seats) {
+	await Promise.all(
+		[...seats.values()]
+			.map(async seat => gotOk(await seat.$waiter().result))
+	)
+}
 

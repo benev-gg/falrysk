@@ -1,5 +1,9 @@
 
 @layer app {
+	html {
+		scrollbar-gutter: auto;
+	}
+
 	benev-header {
 		z-index: 2;
 		position: absolute;

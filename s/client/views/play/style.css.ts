@@ -15,12 +15,28 @@ export default css`
 	gap: 0.2em;
 }
 
-canvas {
-	display: block;
+.seat {
+	position: relative;
 	flex: 1 1 0;
-	background: #000;
 	min-width: 0;
 	min-height: 0;
+
+	&[data-drop]::after {
+		content: "";
+		display: block;
+		position: absolute;
+		inset: 0;
+		border: 0.25em dashed var(--drop);
+		background: oklch(from var(--drop) l c h / 25%);
+	}
+}
+
+canvas {
+	display: block;
+	position: relative;
+	inset: 0;
+	width: 100%;
+	height: 100%;
 
 	&:focus {
 		outline: none;

@@ -2,6 +2,7 @@
 @layer vars {
 	:root, :host {
 		--falrysk: #f90;
+		--drop: #00ffcc;
 	}
 }
 
