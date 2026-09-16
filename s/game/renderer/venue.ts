@@ -1,6 +1,6 @@
 
 import {EntitiesReadonly} from "@benev/archimedes"
-import {createEngine, createSceneContext, disposeEngine, disposeScene} from "@babylonjs/lite"
+import {createEngine, createSceneContext, disposeEngine, disposeScene, setEngineSize} from "@babylonjs/lite"
 
 import {Catalog} from "./catalog.js"
 import {PlayerId} from "../simulation/types.js"
@@ -26,6 +26,10 @@ export async function setupVenue({playerId, entities, catalog}: {
 		disposeEngine(engine)
 	}
 
-	return {playerId, entities, canvas, engine, scene, catalog, dispose}
+	function setRenderSize(width: number, height: number) {
+		setEngineSize(engine, width, height)
+	}
+
+	return {playerId, entities, canvas, engine, scene, catalog, setRenderSize, dispose}
 }
 
