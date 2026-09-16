@@ -40,7 +40,7 @@ export async function startDirector(basis: Basis) {
 	// start running the simulation
 	dispose.schedule(
 		smartCycle(consts.simulationHz.max, 3, async() => {
-			players.update(Date.now(), basis.deck.ports)
+			players.update(performance.now(), basis.deck.ports)
 			simulation.simulate(players.actions)
 		})
 	)
@@ -126,18 +126,15 @@ const createProjection = (
 	}
 })
 
-export function projectionsReady(projections: Projections) {
-	return new Promise<void>((resolve, reject) => {
+const projectionsReady = (projections: Projections) => (
+	new Promise<void>((resolve, reject) => {
 		const ready = new WeakSet<Waiter<Projection>>()
 		let done = false
 		let dispose = () => {}
 
 		const check = () => {
-			if (done)
-				return
-
+			if (done) return
 			const waiting = [...projections.values()]
-
 			if (waiting.every(w => ready.has(w))) {
 				done = true
 				dispose()
@@ -147,7 +144,6 @@ export function projectionsReady(projections: Projections) {
 
 		dispose = effect(() => {
 			const waiting = [...projections.values()]
-
 			for (const waiter of waiting) {
 				if (!ready.has(waiter))
 					waiter.result.then(result => {
@@ -165,9 +161,8 @@ export function projectionsReady(projections: Projections) {
 						}
 					})
 			}
-
 			check()
 		})
 	})
-}
+)
 
