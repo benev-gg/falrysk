@@ -17,6 +17,10 @@ export class LocalPlayers {
 		return this.#actions
 	}
 
+	getIds(): PlayerId[] {
+		return [...this.#actions.keys()]
+	}
+
 	update(now: number, ports: Port[]) {
 
 		// delete stale players

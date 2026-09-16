@@ -24,7 +24,7 @@ export const makeRouter = ({
 			basis.benevHeader.render(null)
 			const mod = await import("./parts/load-play.js")
 			const View = await mod.default(basis)
-			return View(basis)
+			return View()
 		})
 	},
 })

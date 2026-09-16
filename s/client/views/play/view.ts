@@ -10,13 +10,14 @@ import {Basis} from "../../types.js"
 import styleCss from "./style.css.js"
 import {consts} from "../../../consts.js"
 import {Viewsplit} from "./sub/viewsplit.js"
+import {Director} from "../../parts/director.js"
 import {themeCss} from "../../../lib/web/theme.js"
 import {Catalog} from "../../../game/renderer/catalog.js"
 import {smartCycle} from "../../../lib/tools/smart-cycle.js"
 import {LocalPlayers} from "../../parts/inputs/local-players.js"
 import {Simulation} from "../../../game/simulation/simulation.js"
 
-export const Play = shadow((basis: Basis) => {
+export const Play = (basis: Basis, director: Director) => shadow(() => {
 	useCss(themeCss, styleCss)
 
 	const $playing = useSignal(true)
