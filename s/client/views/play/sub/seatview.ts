@@ -3,7 +3,7 @@ import {html} from "lit"
 import {earthSpinner, light, loot, useOnce} from "@e280/sly"
 
 import {Viewport} from "./viewport.js"
-import {Seat} from "../../../parts/director.js"
+import {Seat} from "../../../parts/director/types.js"
 import {Catalog} from "../../../../game/renderer/catalog.js"
 
 export const Seatview = light((seat: Seat) => {

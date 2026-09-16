@@ -6,8 +6,8 @@ import {repeat} from "lit/directives/repeat.js"
 
 import styleCss from "./style.css.js"
 import {Seatview} from "./sub/seatview.js"
-import {Director} from "../../parts/director.js"
 import {themeCss} from "../../../lib/web/theme.js"
+import {Director} from "../../parts/director/types.js"
 
 export const Play = (director: Director) => shadow(() => {
 	useCss(themeCss, styleCss)
