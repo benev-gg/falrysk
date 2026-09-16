@@ -4,7 +4,7 @@ import {light, useMount, useOnce, useSignal} from "@e280/sly"
 
 import {rafloop} from "../../../../lib/web/rafloop.js"
 import {Realm} from "../../../../game/renderer/realm.js"
-import {setupRender} from "../../../../game/renderer/render.js"
+import {setupRenderSystems} from "../../../../game/renderer/systems.js"
 import {useResizeObserver} from "../../../../lib/web/use-resize-observer.js"
 
 export const Viewport = light((realm: Realm) => {
@@ -12,7 +12,7 @@ export const Viewport = light((realm: Realm) => {
 	const {canvas} = venue
 
 	const $resolution = useSignal(1)
-	const render = useOnce(() => setupRender(realm))
+	const render = useOnce(() => setupRenderSystems(realm))
 
 	useResizeObserver(canvas, rect => {
 		const scale = $resolution() * window.devicePixelRatio

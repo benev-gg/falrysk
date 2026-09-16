@@ -10,7 +10,7 @@ import {Catalog} from "../../../../game/renderer/catalog.js"
 import {setupVenue} from "../../../../game/renderer/venue.js"
 import {setupScene} from "../../../../game/renderer/scene.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
-import {setupRender} from "../../../../game/renderer/render.js"
+import {setupRenderSystems} from "../../../../game/renderer/systems.js"
 import {GameComponents} from "../../../../game/simulation/parts/components.js"
 
 export async function makeProjector(
@@ -25,7 +25,7 @@ export async function makeProjector(
 	try {
 		const getActions = () => got(players.actions.get(playerId))
 		const realm = new Realm(venue)
-		const runRenderSystems = setupRender(realm)
+		const runRenderSystems = setupRenderSystems(realm)
 
 		await setupScene(realm)
 
@@ -39,7 +39,7 @@ export async function makeProjector(
 			venue.dispose()
 		}
 
-		render(1000 / consts.simulationHz.max)
+		render(1000 / consts.simulationHz)
 
 		return {playerId, realm, getActions, render, dispose}
 	}

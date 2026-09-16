@@ -25,7 +25,7 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 
 	// start running the simulation
 	dispose.schedule(
-		smartCycle(consts.simulationHz.max, 3, async() => {
+		smartCycle(consts.simulationHz, 3, async() => {
 			players.update(performance.now(), basis.deck.ports)
 
 			if ($playing())

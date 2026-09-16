@@ -9,13 +9,13 @@ import {Phys} from "../utils/phys.js"
 import {bindings} from "./bindings.js"
 import {consts} from "../../../consts.js"
 import {GameComponents} from "./components.js"
-import {Timing} from "../../../lib/tools/timing.js"
+import {SimulationClock} from "../utils/simulation-clock.js"
 import {Physics} from "../../../lib/physics/physics.js"
 
 export class Pod {
 	actions = new Map<PlayerId, Actions<typeof bindings>>()
 	inputs = new Map<PlayerId, Intent[]>()
-	timing = new Timing(consts.simulationHz.min, consts.simulationHz.max)
+	timing = new SimulationClock(consts.simulationHz)
 	physics = new Physics()
 	physLattice = new Lattice<Phys>(new Vec2(8, 8))
 	targetLattice = new Lattice<Id>(new Vec2(8, 8))

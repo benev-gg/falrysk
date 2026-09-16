@@ -4,12 +4,12 @@ import {disposer, ev} from "@e280/stz"
 
 import {Venue} from "./venue.js"
 import {Gimbal} from "./parts/gimbal.js"
-import {Timing} from "../../lib/tools/timing.js"
+import {RenderClock} from "./parts/render-clock.js"
 
 export class Realm {
 	gimbal = new Gimbal()
 	pointer = new Vec2()
-	timing = new Timing()
+	clock = new RenderClock()
 	dispose = disposer()
 
 	constructor(public venue: Venue) {
