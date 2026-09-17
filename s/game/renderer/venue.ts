@@ -4,21 +4,23 @@ import {createEngine, createSceneContext, disposeEngine, disposeScene, setEngine
 
 import {Catalog} from "./catalog.js"
 import {PlayerId} from "../simulation/types.js"
+import {AnyCanvas} from "../../lib/buddy/types.js"
 import {GameComponents} from "../simulation/parts/components.js"
 
 export type Venue = Awaited<ReturnType<typeof setupVenue>>
 
-export async function setupVenue({playerId, entities, catalog}: {
+export async function setupVenue({canvas, playerId, entities, catalog}: {
+		canvas: AnyCanvas
 		playerId: PlayerId,
 		entities: EntitiesReadonly<GameComponents>,
 		catalog: Catalog
 	}) {
 
-	const canvas = document.createElement("canvas")
 	const engine = await createEngine(canvas, {
 		useFloatingOrigin: true,
 		useHighPrecisionMatrix: true,
 	})
+
 	const scene = createSceneContext(engine)
 
 	const dispose = () => {

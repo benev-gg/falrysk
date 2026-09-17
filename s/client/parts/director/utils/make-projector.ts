@@ -20,7 +20,8 @@ export async function makeProjector(
 		catalog: Catalog,
 	) {
 
-	const venue = await setupVenue({playerId, entities, catalog})
+	const canvas = document.createElement("canvas")
+	const venue = await setupVenue({canvas, playerId, entities, catalog})
 
 	try {
 		const getActions = () => got(players.actions.get(playerId))
