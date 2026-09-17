@@ -1,19 +1,19 @@
 
-import {Vec3} from "@benev/math"
 import {createFreeCamera} from "@babylonjs/lite"
+import {Worldspace3} from "../../uni/coords/worldspace.js"
 
 export class Gimbal {
 	readonly camera
 
-	pivot = new Vec3()
 	yaw = 0
 	pitch = 0
 	radius = 0
+	position = new Worldspace3()
 
 	constructor() {
 		this.camera = createFreeCamera(
-			new Vec3(0, 0, 0),
-			new Vec3(0, 0, 1),
+			new Worldspace3(0, 0, 0).toBabylon(),
+			new Worldspace3(0, 1, 0).toBabylon(),
 		)
 	}
 
@@ -21,11 +21,11 @@ export class Gimbal {
 		const forward = this.#forward()
 
 		this.camera.position.copyFrom(
-			this.pivot.dup().sub(forward.dup().mulBy(this.radius))
+			this.position.dup().sub(forward.dup().mulBy(this.radius)).toBabylon()
 		)
 
 		this.camera.target.copyFrom(
-			this.pivot.dup().add(forward)
+			this.position.dup().add(forward).toBabylon()
 		)
 	}
 
@@ -33,10 +33,10 @@ export class Gimbal {
 		const {yaw, pitch} = this
 		const cosPitch = Math.cos(pitch)
 
-		return new Vec3(
+		return new Worldspace3(
 			Math.sin(yaw) * cosPitch,
-			Math.sin(pitch),
 			Math.cos(yaw) * cosPitch,
+			Math.sin(pitch),
 		)
 	}
 }

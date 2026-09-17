@@ -1,26 +1,14 @@
 
 import {Vec3 as BabVec3} from "@babylonjs/lite"
-import {clamp, Vec2, Vec3, Xy, XyArray, Xyz, XyzArray} from "@benev/math"
+import {clamp, Vec2, Vec3, Xyz} from "@benev/math"
 
 export class Worldspace2 extends Vec2 {
-	static from(v: Xy | XyArray) {
-		return Array.isArray(v)
-			? new this(...v)
-			: new this(v.x, v.y)
-	}
-
 	addZ(z = 0) {
 		return new Worldspace3(this.x, this.y, z)
 	}
 }
 
 export class Worldspace3 extends Vec3 {
-	static from(v: Xyz | XyzArray) {
-		return Array.isArray(v)
-			? new this(...v)
-			: new this(v.x, v.y, v.z)
-	}
-
 	static fromBabylon(v: Xyz) {
 		return new this(v.x, v.z, v.y)
 	}
