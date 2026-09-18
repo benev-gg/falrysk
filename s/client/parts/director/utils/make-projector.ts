@@ -6,7 +6,7 @@ import {Projector} from "../types.js"
 import {consts} from "../../../../consts.js"
 import {Catalog} from "../../../../game/renderer/catalog.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
-import {RenderWorkerFns} from "../../../../game/renderer/types.js"
+import {RendererFns} from "../../../../game/renderer/types.js"
 import {GameComponents} from "../../../../game/simulation/parts/components.js"
 
 export async function makeProjector(
@@ -17,11 +17,16 @@ export async function makeProjector(
 
 	const canvas = document.createElement("canvas")
 	const url = new URL(consts.workers.render, import.meta.url)
-	const worker = await connectWorker<RenderWorkerFns>(url)
-	const dispose = () => worker.dispose()
+	const worker = new Worker(url, {type: "module"})
+	const renderer = await connectWorker<RendererFns>({
+		worker,
+		connectTimeout: 5_000,
+		exposeAllErrors: true,
+	})
+	const dispose = () => renderer.dispose()
 
 	try {
-		await worker.remote.initialize({
+		await renderer.remote.initialize({
 			playerId,
 			catalog,
 			entities: [...entities.entries()],
@@ -34,6 +39,6 @@ export async function makeProjector(
 		throw error
 	}
 
-	return {playerId, worker, canvas, dispose}
+	return {playerId, renderer, canvas, dispose}
 }
 

@@ -4,7 +4,7 @@ import {WorkerConnection} from "@e280/renraku/web"
 
 import {Catalog} from "../../../game/renderer/catalog.js"
 import {PlayerId} from "../../../game/simulation/types.js"
-import {RenderWorkerFns} from "../../../game/renderer/types.js"
+import {RendererFns} from "../../../game/renderer/types.js"
 import {Simulation} from "../../../game/simulation/simulation.js"
 
 export type Seats = RMap<PlayerId, Seat>
@@ -26,7 +26,7 @@ export type Seat = {
 export type Projector = {
 	playerId: PlayerId
 	canvas: HTMLCanvasElement
-	worker: WorkerConnection<RenderWorkerFns>
+	renderer: WorkerConnection<RendererFns>
 	dispose: () => void
 }
 

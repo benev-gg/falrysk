@@ -5,7 +5,7 @@ import {renderFrame} from "@babylonjs/lite"
 import {Components, Entities, Id} from "@benev/archimedes"
 
 import {makeRealm} from "./realm.js"
-import {RenderWorkerFns} from "./types.js"
+import {RendererFns} from "./types.js"
 import {rafloop} from "../../lib/web/rafloop.js"
 import {Realm} from "../../game/renderer/realm.js"
 import {Catalog} from "../../game/renderer/catalog.js"
@@ -14,7 +14,7 @@ import {setupScene} from "../../game/renderer/scene.js"
 import {setupRenderSystems} from "../../game/renderer/systems.js"
 import {GameComponents} from "../../game/simulation/parts/components.js"
 
-export function setupRenderWorker(): RenderWorkerFns {
+export function setupRenderWorker(): RendererFns {
 	let state: undefined | {
 		entities: Entities<Components>
 		realm: Realm

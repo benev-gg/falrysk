@@ -11,7 +11,7 @@ export const Viewport = light((projector: Projector) => {
 		const scale = $resolution() * window.devicePixelRatio
 		const width = Math.floor(rect.width * scale) || 10
 		const height = Math.floor(rect.height * scale) || 10
-		projector.worker.remote.setRenderSize(width, height)
+		projector.renderer.remote.setRenderSize(width, height)
 	})
 
 	return canvas

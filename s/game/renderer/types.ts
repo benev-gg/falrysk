@@ -1,11 +1,11 @@
 
 import {XyArray} from "@benev/math"
 import {Id} from "@benev/archimedes"
+import {Catalog} from "./catalog.js"
 import {PlayerId} from "../simulation/types.js"
 import {GameComponents} from "../simulation/parts/components.js"
-import { Catalog } from "./catalog.js"
 
-export type RenderWorkerFns = {
+export type RendererFns = {
 	initialize(options: {
 		playerId: PlayerId
 		catalog: Catalog
