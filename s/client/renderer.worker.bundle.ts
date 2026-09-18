@@ -1,9 +1,9 @@
 
 import {workerize} from "@e280/renraku/web"
-import {setupRenderWorker} from "../game/renderer/worker.js"
+import {setupRenderer} from "../game/renderer/renderer.js"
 
 await workerize({
-	fns: setupRenderWorker(),
+	fns: setupRenderer(),
 	exposeAllErrors: true,
 })
 

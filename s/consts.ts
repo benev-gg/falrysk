@@ -5,7 +5,7 @@ export const consts = deep.freeze({
 	base: "https://benev.gg/falrysk",
 	simulationHz: 60,
 	workers: {
-		render: "./render-worker.bundle.min.js",
+		render: "./renderer.worker.bundle.min.js",
 	},
 	assets: {
 		local: "/assets",

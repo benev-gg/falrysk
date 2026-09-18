@@ -1,23 +1,24 @@
 
 import {got} from "@e280/stz"
-import {XyArray} from "@benev/math"
-import {renderFrame} from "@babylonjs/lite"
+import {Vec2, XyArray} from "@benev/math"
+import {renderFrame, waitForGpuIdle} from "@babylonjs/lite"
 import {Components, Entities, Id} from "@benev/archimedes"
 
 import {makeRealm} from "./realm.js"
 import {RendererFns} from "./types.js"
 import {rafloop} from "../../lib/web/rafloop.js"
-import {Realm} from "../../game/renderer/realm.js"
-import {Catalog} from "../../game/renderer/catalog.js"
-import {PlayerId} from "../../game/simulation/types.js"
-import {setupScene} from "../../game/renderer/scene.js"
-import {setupRenderSystems} from "../../game/renderer/systems.js"
-import {GameComponents} from "../../game/simulation/parts/components.js"
+import {Realm} from "./realm.js"
+import {Catalog} from "./catalog.js"
+import {PlayerId} from "../simulation/types.js"
+import {setupScene} from "./scene.js"
+import {setupRenderSystems} from "./systems.js"
+import {GameComponents} from "../simulation/parts/components.js"
 
-export function setupRenderWorker(): RendererFns {
+export function setupRenderer(): RendererFns {
 	let state: undefined | {
 		entities: Entities<Components>
 		realm: Realm
+		resizeWhenReady: undefined | Vec2
 		render: (dt: number) => void
 		dispose: () => void
 	}
@@ -47,21 +48,28 @@ export function setupRenderWorker(): RendererFns {
 			await setupScene(realm)
 
 			const render = (dt: number) => {
+				if (!state) return
+				if (state.resizeWhenReady) {
+					const {x, y} = state.resizeWhenReady
+					realm.setRenderSize(x, y)
+					state.resizeWhenReady = undefined
+				}
 				runRenderSystems()
 				renderFrame(realm.engine, dt)
 			}
 
-			render(1000 / 60)
 			const stop = rafloop(render)
 			const dispose = () => {
 				stop()
 				realm.dispose()
 			}
-			state = {realm, entities, render, dispose}
+			state = {realm, entities, resizeWhenReady: undefined, render, dispose}
+			render(1000 / 60)
+			await waitForGpuIdle(realm.engine)
 		},
 
 		async setRenderSize(x: number, y: number) {
-			got(state).realm.setRenderSize(x, y)
+			got(state).resizeWhenReady = new Vec2(x, y)
 		},
 	}
 }
