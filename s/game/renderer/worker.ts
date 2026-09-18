@@ -4,7 +4,7 @@ import {acceptWorkerPort, webAutoTransfer} from "@e280/renraku/web"
 import {RenderWorkerFns} from "./types.js"
 
 export async function makeRenderWorker() {
-	const url = new URL("./render-worker.bundle.min.js", import.meta.url)
+	const url = new URL("./worker.bundle.min.js", import.meta.url)
 	const worker = new Worker(url, {type: "module"})
 	const port = await acceptWorkerPort(worker)
 	const portal = new Portal<RenderWorkerFns>({port, autoTransfer: webAutoTransfer})

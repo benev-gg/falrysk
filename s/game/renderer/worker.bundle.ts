@@ -7,14 +7,14 @@ import {Components, Entities, Id} from "@benev/archimedes"
 import {offerWorkerPort, webAutoTransfer} from "@e280/renraku/web"
 
 import {RenderWorkerFns} from "./types.js"
-import {rafloop} from "../../../lib/web/rafloop.js"
-import {Realm} from "../../../game/renderer/realm.js"
-import {Catalog} from "../../../game/renderer/catalog.js"
-import {setupVenue} from "../../../game/renderer/venue.js"
-import {PlayerId} from "../../../game/simulation/types.js"
-import {setupScene} from "../../../game/renderer/scene.js"
-import {setupRenderSystems} from "../../../game/renderer/systems.js"
-import {GameComponents} from "../../../game/simulation/parts/components.js"
+import {rafloop} from "../../lib/web/rafloop.js"
+import {Realm} from "../../game/renderer/realm.js"
+import {Catalog} from "../../game/renderer/catalog.js"
+import {setupVenue} from "../../game/renderer/venue.js"
+import {PlayerId} from "../../game/simulation/types.js"
+import {setupScene} from "../../game/renderer/scene.js"
+import {setupRenderSystems} from "../../game/renderer/systems.js"
+import {GameComponents} from "../../game/simulation/parts/components.js"
 
 let state: undefined | {
 	entities: Entities<Components>

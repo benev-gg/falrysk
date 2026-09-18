@@ -1,6 +1,6 @@
 
 import {Vec2} from "@benev/math"
-import {disposer, ev} from "@e280/stz"
+import {disposer} from "@e280/stz"
 
 import {Venue} from "./venue.js"
 import {Gimbal} from "./parts/gimbal.js"
@@ -11,17 +11,6 @@ export class Realm {
 	pointer = new Vec2()
 	clock = new RenderClock()
 	dispose = disposer()
-
-	constructor(public venue: Venue) {
-		const {canvas} = venue
-
-		this.dispose.schedule(ev(canvas, {
-			pointermove: ({clientX, clientY}: PointerEvent) => {
-				const {width, height} = canvas.getBoundingClientRect()
-				this.pointer.x = clientX / width
-				this.pointer.y = clientY / height
-			},
-		}))
-	}
+	constructor(public venue: Venue) {}
 }
 
