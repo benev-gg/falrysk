@@ -27,5 +27,6 @@ export type Projector = {
 	playerId: PlayerId
 	canvas: HTMLCanvasElement
 	worker: WorkerConnection<RenderWorkerFns>
+	dispose: () => void
 }
 

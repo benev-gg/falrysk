@@ -18,15 +18,22 @@ export async function makeProjector(
 	const canvas = document.createElement("canvas")
 	const url = new URL(consts.workers.render, import.meta.url)
 	const worker = await connectWorker<RenderWorkerFns>(url)
+	const dispose = () => worker.dispose()
 
-	await worker.remote.initialize({
-		playerId,
-		catalog,
-		entities: [...entities.entries()],
-		canvas: canvas.transferControlToOffscreen(),
-		dimensions: [200, 100],
-	})
+	try {
+		await worker.remote.initialize({
+			playerId,
+			catalog,
+			entities: [...entities.entries()],
+			canvas: canvas.transferControlToOffscreen(),
+			dimensions: [200, 100],
+		})
+	}
+	catch (error) {
+		dispose()
+		throw error
+	}
 
-	return {playerId, worker, canvas}
+	return {playerId, worker, canvas, dispose}
 }
 

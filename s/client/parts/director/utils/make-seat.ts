@@ -23,7 +23,7 @@ export function makeSeat(
 
 	const dispose = async() => {
 		const result = await $wait().result
-		if (result.ok) return result.value.worker.dispose()
+		if (result.ok) return result.value.dispose()
 	}
 
 	const rebuild = async(catalog: Catalog) => {
