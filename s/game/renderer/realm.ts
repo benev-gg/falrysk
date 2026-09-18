@@ -41,7 +41,7 @@ export async function makeRealm(options: {
 		gimbal: new Gimbal(),
 		clock: new RenderClock(),
 		pointer: new Vec2(),
-		setRenderSize: (x: number, y: number) => setEngineSize(engine, x, y),
+		setRenderSize: ({x, y}: Vec2) => setEngineSize(engine, x, y),
 		dispose,
 	}
 }

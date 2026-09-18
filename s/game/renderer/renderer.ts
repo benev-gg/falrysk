@@ -1,27 +1,30 @@
 
-import {got} from "@e280/stz"
+import {defer} from "@e280/stz"
 import {Vec2, XyArray} from "@benev/math"
-import {renderFrame, waitForGpuIdle} from "@babylonjs/lite"
+import {signal, Signal} from "@e280/strata"
 import {Components, Entities, Id} from "@benev/archimedes"
+import {renderFrame, waitForGpuIdle} from "@babylonjs/lite"
 
-import {makeRealm} from "./realm.js"
-import {RendererFns} from "./types.js"
-import {rafloop} from "../../lib/web/rafloop.js"
 import {Realm} from "./realm.js"
 import {Catalog} from "./catalog.js"
-import {PlayerId} from "../simulation/types.js"
+import {makeRealm} from "./realm.js"
 import {setupScene} from "./scene.js"
+import {RendererFns} from "./types.js"
+import {PlayerId} from "../simulation/types.js"
 import {setupRenderSystems} from "./systems.js"
+import {rafloop} from "../../lib/web/rafloop.js"
 import {GameComponents} from "../simulation/parts/components.js"
 
+export type Venue = {
+	entities: Entities<Components>
+	realm: Realm
+	$resize: Signal<Vec2 | null>
+	render: (dt: number) => void
+	dispose: () => void
+}
+
 export function setupRenderer(): RendererFns {
-	let state: undefined | {
-		entities: Entities<Components>
-		realm: Realm
-		resizeWhenReady: undefined | Vec2
-		render: (dt: number) => void
-		dispose: () => void
-	}
+	const ready = defer<Venue>()
 
 	return {
 		async initialize(options: {
@@ -33,6 +36,9 @@ export function setupRenderer(): RendererFns {
 			}) {
 
 			const {canvas, playerId, dimensions, catalog} = options
+
+			const $resize = signal<Vec2 | null>(Vec2.from(dimensions))
+
 			const entities = new Entities(options.entities)
 
 			const realm = await makeRealm({
@@ -42,34 +48,33 @@ export function setupRenderer(): RendererFns {
 				entities: entities.readonly,
 			})
 
-			realm.setRenderSize(...dimensions)
 			const runRenderSystems = setupRenderSystems(realm)
 
 			await setupScene(realm)
 
 			const render = (dt: number) => {
-				if (!state) return
-				if (state.resizeWhenReady) {
-					const {x, y} = state.resizeWhenReady
-					realm.setRenderSize(x, y)
-					state.resizeWhenReady = undefined
-				}
+				const resize = $resize()
+				if (resize) realm.setRenderSize(resize)
 				runRenderSystems()
 				renderFrame(realm.engine, dt)
 			}
 
 			const stop = rafloop(render)
+
 			const dispose = () => {
 				stop()
 				realm.dispose()
 			}
-			state = {realm, entities, resizeWhenReady: undefined, render, dispose}
+
+			ready.resolve({realm, entities, $resize, render, dispose})
+
 			render(1000 / 60)
 			await waitForGpuIdle(realm.engine)
 		},
 
 		async setRenderSize(x: number, y: number) {
-			got(state).resizeWhenReady = new Vec2(x, y)
+			const venue = await ready
+			venue.$resize(new Vec2(x, y))
 		},
 	}
 }
