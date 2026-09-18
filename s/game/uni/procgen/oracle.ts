@@ -1,5 +1,5 @@
 
-import {Rand, seed} from "@e280/stz"
+import {mulberry, Rand} from "@e280/stz"
 import {clamp, makeNoiseSampler} from "@benev/math"
 import {smoothstep} from "../../../lib/tools/smoothstep.js"
 import {Worldspace2, Worldspace3} from "../coords/worldspace.js"
@@ -12,7 +12,7 @@ export class Oracle {
 			seed: number
 			size: Worldspace2
 		}) {
-		this.rand = new Rand(seed(options.seed))
+		this.rand = new Rand(mulberry(options.seed))
 		this.#noise = makeNoiseSampler(this.rand.random)
 	}
 
