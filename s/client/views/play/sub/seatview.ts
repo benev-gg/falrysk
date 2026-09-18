@@ -11,8 +11,8 @@ export const Seatview = light((seat: Seat) => {
 		acceptDrop: async event => {
 			const [file] = loot.files(event)
 			console.log("dropped file", file.name)
-			// const buffer = await file.arrayBuffer()
-			// await seat.rebuild(new Catalog())
+			const artGlb = await file.arrayBuffer()
+			await seat.rebuild({artGlb})
 		},
 	}))
 

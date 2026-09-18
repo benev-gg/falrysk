@@ -19,7 +19,7 @@ export function setupRenderWorker(): RenderWorkerFns {
 		entities: Entities<Components>
 		realm: Realm
 		render: (dt: number) => void
-		stop: () => void
+		dispose: () => void
 	}
 
 	return {
@@ -28,10 +28,10 @@ export function setupRenderWorker(): RenderWorkerFns {
 				canvas: OffscreenCanvas
 				entities: [id: Id, components: Partial<GameComponents>][]
 				dimensions: XyArray
+				catalog: Catalog
 			}) {
 
-			const {canvas, playerId, dimensions} = options
-			const catalog = new Catalog()
+			const {canvas, playerId, dimensions, catalog} = options
 			const entities = new Entities(options.entities)
 
 			const realm = await makeRealm({
@@ -53,7 +53,11 @@ export function setupRenderWorker(): RenderWorkerFns {
 
 			render(1000 / 60)
 			const stop = rafloop(render)
-			state = {realm, entities, render, stop}
+			const dispose = () => {
+				stop()
+				realm.dispose()
+			}
+			state = {realm, entities, render, dispose}
 		},
 
 		async setRenderSize(x: number, y: number) {
