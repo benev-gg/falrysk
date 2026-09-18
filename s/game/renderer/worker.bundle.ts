@@ -1,16 +1,15 @@
 
 import {got} from "@e280/stz"
 import {XyArray} from "@benev/math"
-import {Portal} from "@e280/renraku"
+import {workerize} from "@e280/renraku/web"
 import {renderFrame} from "@babylonjs/lite"
 import {Components, Entities, Id} from "@benev/archimedes"
-import {offerWorkerPort, webAutoTransfer} from "@e280/renraku/web"
 
 import {RenderWorkerFns} from "./types.js"
 import {rafloop} from "../../lib/web/rafloop.js"
 import {Realm} from "../../game/renderer/realm.js"
 import {Catalog} from "../../game/renderer/catalog.js"
-import {setupVenue} from "../../game/renderer/venue.js"
+import {makeRealm} from "./realm.js"
 import {PlayerId} from "../../game/simulation/types.js"
 import {setupScene} from "../../game/renderer/scene.js"
 import {setupRenderSystems} from "../../game/renderer/systems.js"
@@ -23,7 +22,7 @@ let state: undefined | {
 	stop: () => void
 }
 
-const fns: RenderWorkerFns = {
+await workerize(<RenderWorkerFns>{
 	async initialize(options: {
 			playerId: PlayerId
 			canvas: OffscreenCanvas
@@ -35,22 +34,21 @@ const fns: RenderWorkerFns = {
 		const catalog = new Catalog()
 		const entities = new Entities(options.entities)
 
-		const venue = await setupVenue({
+		const realm = await makeRealm({
 			canvas,
 			catalog,
 			playerId,
 			entities: entities.readonly,
 		})
 
-		venue.setRenderSize(...dimensions)
-		const realm = new Realm(venue)
+		realm.setRenderSize(...dimensions)
 		const runRenderSystems = setupRenderSystems(realm)
 
 		await setupScene(realm)
 
 		const render = (dt: number) => {
 			runRenderSystems()
-			renderFrame(realm.venue.engine, dt)
+			renderFrame(realm.engine, dt)
 		}
 
 		render(1000 / 60)
@@ -58,12 +56,8 @@ const fns: RenderWorkerFns = {
 		state = {realm, entities, render, stop}
 	},
 
-	async setDimensions(x: number, y: number) {
-		got(state).realm.venue.setRenderSize(x, y)
+	async setRenderSize(x: number, y: number) {
+		got(state).realm.setRenderSize(x, y)
 	},
-}
-
-const port = await offerWorkerPort()
-
-new Portal({port, fns, autoTransfer: webAutoTransfer})
+})
 

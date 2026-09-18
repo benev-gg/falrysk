@@ -10,8 +10,7 @@ import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
 
 export async function setupScene(realm: Realm) {
-	const {venue} = realm
-	const {scene, engine} = venue
+	const {scene, engine} = realm
 
 	scene.clearColor = {r: 0, b: 0, g: 0, a: 1}
 	const light = createHemisphericLight([.123, 1, .234], 1)

@@ -12,6 +12,6 @@ export type RenderWorkerFns = {
 		dimensions: XyArray
 	}): Promise<void>
 
-	setDimensions(x: number, y: number): Promise<void>
+	setRenderSize(x: number, y: number): Promise<void>
 }
 

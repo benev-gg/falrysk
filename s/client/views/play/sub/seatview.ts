@@ -4,7 +4,6 @@ import {earthSpinner, light, loot, useOnce} from "@e280/sly"
 
 import {Viewport} from "./viewport.js"
 import {Seat} from "../../../parts/director/types.js"
-import {Catalog} from "../../../../game/renderer/catalog.js"
 
 export const Seatview = light((seat: Seat) => {
 	const drops = useOnce(() => new loot.Drops({
@@ -13,7 +12,7 @@ export const Seatview = light((seat: Seat) => {
 			const [file] = loot.files(event)
 			console.log("dropped file", file.name)
 			// const buffer = await file.arrayBuffer()
-			await seat.rebuild(new Catalog())
+			// await seat.rebuild(new Catalog())
 		},
 	}))
 
@@ -26,7 +25,7 @@ export const Seatview = light((seat: Seat) => {
 			@dragleave=${drops.dragleave}
 			@drop=${drops.drop}>
 
-			${earthSpinner(seat.$waiter()(), projector => Viewport(projector.realm))}
+			${earthSpinner(seat.$wait()(), projector => Viewport(projector))}
 		</div>
 	`
 })

@@ -1,52 +1,27 @@
 
-import {got} from "@e280/stz"
-import {renderFrame} from "@babylonjs/lite"
+import {connectWorker} from "@e280/renraku/web"
 import {EntitiesReadonly} from "@benev/archimedes"
 
-import {consts} from "../../../../consts.js"
-import {Realm} from "../../../../game/renderer/realm.js"
-import {LocalPlayers} from "../../inputs/local-players.js"
-import {Catalog} from "../../../../game/renderer/catalog.js"
-import {setupVenue} from "../../../../game/renderer/venue.js"
-import {setupScene} from "../../../../game/renderer/scene.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
-import {setupRenderSystems} from "../../../../game/renderer/systems.js"
+import {RenderWorkerFns} from "../../../../game/renderer/types.js"
 import {GameComponents} from "../../../../game/simulation/parts/components.js"
 
 export async function makeProjector(
 		playerId: PlayerId,
-		players: LocalPlayers,
 		entities: EntitiesReadonly<GameComponents>,
-		catalog: Catalog,
 	) {
 
 	const canvas = document.createElement("canvas")
-	const venue = await setupVenue({canvas, playerId, entities, catalog})
+	const url = new URL("../game/renderer/worker.bundle.min.js", import.meta.url)
+	const worker = await connectWorker<RenderWorkerFns>(url)
 
-	try {
-		const getActions = () => got(players.actions.get(playerId))
-		const realm = new Realm(venue)
-		const runRenderSystems = setupRenderSystems(realm)
+	await worker.remote.initialize({
+		playerId,
+		entities: [...entities.entries()],
+		canvas: canvas.transferControlToOffscreen(),
+		dimensions: [200, 100],
+	})
 
-		await setupScene(realm)
-
-		const render = (dt: number) => {
-			runRenderSystems()
-			renderFrame(realm.venue.engine, dt)
-		}
-
-		const dispose = () => {
-			realm.dispose()
-			venue.dispose()
-		}
-
-		render(1000 / consts.simulationHz)
-
-		return {playerId, realm, getActions, render, dispose}
-	}
-	catch (error) {
-		venue.dispose()
-		throw error
-	}
+	return {playerId, worker, canvas}
 }
 
