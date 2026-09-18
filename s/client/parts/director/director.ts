@@ -44,8 +44,14 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 		() => [...seats.values()].map(seat => seat.dispose())
 	)
 
-	players.update(performance.now(), basis.deck.ports)
-	await allProjectorsReady(seats)
-	return {simulation, seats, $playing, dispose}
+	try {
+		players.update(performance.now(), basis.deck.ports)
+		await allProjectorsReady(seats)
+		return {simulation, seats, $playing, dispose}
+	}
+	catch (error) {
+		dispose()
+		throw error
+	}
 }
 
