@@ -1,4 +1,5 @@
 
+import {time} from "@e280/stz"
 import {degrees, Rect, Vec2} from "@benev/math"
 import {addToScene, createHemisphericLight, registerScene} from "@babylonjs/lite"
 
@@ -19,7 +20,7 @@ export async function setupScene(realm: Realm) {
 	scene.camera = realm.gimbal.camera
 	
 	const oracle = new Oracle({
-		seed: 123,
+		seed: Math.floor(Date.now() / time.days(1)),
 		size: new Worldspace2(30_000, 30_000),
 	})
 
