@@ -2,6 +2,7 @@
 import {connectWorker} from "@e280/renraku/web"
 import {EntitiesReadonly} from "@benev/archimedes"
 
+import {consts} from "../../../../consts.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
 import {RenderWorkerFns} from "../../../../game/renderer/types.js"
 import {GameComponents} from "../../../../game/simulation/parts/components.js"
@@ -12,7 +13,7 @@ export async function makeProjector(
 	) {
 
 	const canvas = document.createElement("canvas")
-	const url = new URL("../game/renderer/worker.bundle.min.js", import.meta.url)
+	const url = new URL(consts.workers.render, import.meta.url)
 	const worker = await connectWorker<RenderWorkerFns>(url)
 
 	await worker.remote.initialize({
