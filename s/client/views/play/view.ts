@@ -1,8 +1,8 @@
 
 import {html} from "lit"
 import {got} from "@e280/stz"
-import {shadow, useCss} from "@e280/sly"
 import {repeat} from "lit/directives/repeat.js"
+import {shadow, useCss, useUnmount} from "@e280/sly"
 
 import styleCss from "./style.css.js"
 import {Seatview} from "./sub/seatview.js"
@@ -11,6 +11,7 @@ import {Director} from "../../parts/director/types.js"
 
 export const Play = (director: Director) => shadow(() => {
 	useCss(themeCss, styleCss)
+	useUnmount(() => director.dispose())
 
 	return html`
 		<div class=shell>
