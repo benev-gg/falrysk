@@ -9,14 +9,13 @@ import {Gimbal} from "./parts/gimbal.js"
 import {PlayerId} from "../simulation/types.js"
 import {AnyCanvas} from "../../lib/buddy/types.js"
 import {RenderClock} from "./parts/render-clock.js"
-import {GameComponents} from "../simulation/parts/components.js"
 
 export type Realm = Awaited<ReturnType<typeof makeRealm>>
 
 export async function makeRealm(options: {
 		canvas: AnyCanvas
 		playerId: PlayerId,
-		entities: EntitiesReadonly<GameComponents>,
+		entities: EntitiesReadonly,
 		catalog: Catalog
 	}) {
 

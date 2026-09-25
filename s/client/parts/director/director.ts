@@ -1,5 +1,6 @@
 
 import {disposer} from "@e280/stz"
+import {gameloop} from "@benev/archimedes"
 import {effect, RMap, signal} from "@e280/strata"
 
 import {Basis} from "../../types.js"
@@ -9,7 +10,6 @@ import {LocalPlayers} from "../inputs/local-players.js"
 import {PlayerId} from "../../../game/simulation/types.js"
 import {syncFreshSeats} from "./utils/sync-fresh-seats.js"
 import {syncStaleSeats} from "./utils/sync-stale-seats.js"
-import {smartCycle} from "../../../lib/tools/smart-cycle.js"
 import {Simulation} from "../../../game/simulation/simulation.js"
 import {allProjectorsReady} from "./utils/all-projectors-ready.js"
 
@@ -23,12 +23,12 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 
 	// start running the simulation
 	dispose.schedule(
-		smartCycle(consts.simulationHz, 3, async() => {
+		gameloop(consts.simulationHz, async() => {
 			players.update(performance.now(), basis.deck.ports)
 
 			if ($playing())
 				simulation.simulate(players.actions)
-		})
+		}),
 	)
 
 	// ensure one projection per player

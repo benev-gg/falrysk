@@ -1,10 +1,9 @@
 
-import {consolidate} from "@benev/archimedes"
-import {Realm} from "./realm.js"
+import {consolidateSystems} from "@benev/archimedes"
 import {clock_update} from "./systems/clock_update.js"
 import {gimbal_update} from "./systems/gimbal_update.js"
 
-export const setupRenderSystems = (realm: Realm) => consolidate(realm, {
+export const setupRenderSystems = consolidateSystems({
 	clock_update,
 	gimbal_update,
 })

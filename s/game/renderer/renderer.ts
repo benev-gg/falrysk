@@ -1,19 +1,17 @@
 
 import {defer} from "@e280/stz"
-import {Vec2, XyArray} from "@benev/math"
+import {Vec2} from "@benev/math"
 import {signal, Signal} from "@e280/strata"
-import {Components, Entities, Id} from "@benev/archimedes"
+import {Components, Entities} from "@benev/archimedes"
 import {renderFrame, waitForGpuIdle} from "@babylonjs/lite"
 
 import {Realm} from "./realm.js"
-import {Catalog} from "./catalog.js"
 import {makeRealm} from "./realm.js"
 import {setupScene} from "./scene.js"
 import {RendererFns} from "./types.js"
-import {PlayerId} from "../simulation/types.js"
 import {setupRenderSystems} from "./systems.js"
 import {rafloop} from "../../lib/web/rafloop.js"
-import {GameComponents} from "../simulation/parts/components.js"
+import {makeEntities} from "../simulation/parts/entitites.js"
 
 export type Venue = {
 	entities: Entities<Components>
@@ -27,19 +25,14 @@ export function setupRenderer(): RendererFns {
 	const ready = defer<Venue>()
 
 	return {
-		async initialize(options: {
-				playerId: PlayerId
-				canvas: OffscreenCanvas
-				entities: [id: Id, components: Partial<GameComponents>][]
-				dimensions: XyArray
-				catalog: Catalog
-			}) {
+		async initialize(options) {
 
 			const {canvas, playerId, dimensions, catalog} = options
 
 			const $resize = signal<Vec2 | null>(Vec2.from(dimensions))
 
-			const entities = new Entities(options.entities)
+			const entities = makeEntities()
+			entities.load(options.entitiesSnapshot)
 
 			const realm = await makeRealm({
 				canvas,

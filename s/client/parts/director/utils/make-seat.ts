@@ -5,13 +5,12 @@ import {EntitiesReadonly} from "@benev/archimedes"
 
 import {Seat} from "../types.js"
 import {makeProjector} from "./make-projector.js"
-import {Catalog, makeCatalog} from "../../../../game/renderer/catalog.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
-import {GameComponents} from "../../../../game/simulation/parts/components.js"
+import {Catalog, makeCatalog} from "../../../../game/renderer/catalog.js"
 
 export function makeSeat(
 		playerId: PlayerId,
-		entities: EntitiesReadonly<GameComponents>,
+		entities: EntitiesReadonly,
 	): Seat {
 
 	const mkProjector = async(overrideCatalog?: Catalog) => {

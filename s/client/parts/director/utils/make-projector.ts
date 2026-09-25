@@ -7,12 +7,11 @@ import {consts} from "../../../../consts.js"
 import {Catalog} from "../../../../game/renderer/catalog.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
 import {RendererFns} from "../../../../game/renderer/types.js"
-import {GameComponents} from "../../../../game/simulation/parts/components.js"
 
 export async function makeProjector(
 		playerId: PlayerId,
 		catalog: Catalog,
-		entities: EntitiesReadonly<GameComponents>,
+		entities: EntitiesReadonly,
 	): Promise<Projector> {
 
 	const canvas = document.createElement("canvas")
@@ -29,7 +28,7 @@ export async function makeProjector(
 		await renderer.remote.initialize({
 			playerId,
 			catalog,
-			entities: [...entities.entries()],
+			entitiesSnapshot: entities.save(),
 			canvas: canvas.transferControlToOffscreen(),
 			dimensions: [200, 100],
 		})
