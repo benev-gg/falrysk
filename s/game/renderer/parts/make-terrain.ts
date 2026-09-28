@@ -4,18 +4,18 @@ import {Rect, Vec2} from "@benev/math"
 import {makeId} from "@benev/archimedes"
 import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
-import {Oracle} from "../../uni/procgen/oracle.js"
 import {Worldspace2} from "../../uni/coords/worldspace.js"
+import {Landscape} from "../../uni/procgen/landscape2/landscape.js"
 
 export function makeTerrain(options: {
 		engine: EngineContext
 		material: Material
 		rect: Rect
-		oracle: Oracle
+		landscape: Landscape
 		resolution: Vec2
 	}) {
 
-	const {engine, material, rect, oracle, resolution} = options
+	const {engine, material, rect, landscape, resolution} = options
 
 	// vertices
 	const vertexCount = resolution.x * resolution.y
@@ -34,11 +34,11 @@ export function makeTerrain(options: {
 				.add(rect.min)
 
 			const position = coord
-				.addZ(oracle.elevation(coord))
+				.addZ(landscape.getElevation(coord))
 				.toBabylon()
 
-			const normal = oracle
-				.normal(coord)
+			const normal = landscape
+				.getNormal(coord)
 				.toBabylon()
 
 			positions.set([position.x, position.y, position.z], offset)
