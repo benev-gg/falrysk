@@ -1,15 +1,15 @@
 
-import {time} from "@e280/stz"
+import {rand32, time} from "@e280/stz"
 import {degrees, Rect, Vec2} from "@benev/math"
 import {addToScene, createHemisphericLight, registerScene} from "@babylonjs/lite"
 
 import {Realm} from "./realm.js"
+import {consts} from "../../consts.js"
 import {makeSea} from "./parts/make-sea.js"
 import {makeTerrain} from "./parts/make-terrain.js"
 import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
 import {makeLandscape} from "../uni/procgen/landscape2/landscape.js"
-import { consts } from "../../consts.js"
 
 export async function setupScene(realm: Realm) {
 	const {scene, engine} = realm
@@ -21,14 +21,9 @@ export async function setupScene(realm: Realm) {
 	scene.camera = realm.gimbal.camera
 	
 	const landscape = makeLandscape({
-		seed: Math.floor(Date.now() / time.days(1)),
+		seed: 1, // Math.floor(Date.now() / time.days(1)),
 		size: Worldspace2.all(consts.worldSize),
 	})
-
-	// const oracle = new Oracle({
-	// 	seed: Math.floor(Date.now() / time.days(1)),
-	// 	size: Worldspace2.all(32_768),
-	// })
 
 	const size = landscape.getSize()
 	const middle = size.dup().divBy(2).addZ()
@@ -45,7 +40,7 @@ export async function setupScene(realm: Realm) {
 		engine,
 		material,
 		landscape,
-		resolution: Vec2.new(1024, 1024),
+		resolution: Vec2.new(256, 256),
 		rect: new Rect(Worldspace2.zero(), size),
 	}))
 
