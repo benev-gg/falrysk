@@ -1,7 +1,7 @@
 
 import {mulberry, Rand} from "@e280/stz"
 import {clamp, makeNoiseSampler} from "@benev/math"
-import {smoothstep} from "../../../lib/tools/smoothstep.js"
+import {oldSmoothstep} from "../../../lib/tools/math.js"
 import {Worldspace2, Worldspace3} from "../coords/worldspace.js"
 
 export class Oracle {
@@ -54,7 +54,7 @@ export class Oracle {
 			this.#noise(wx + 14_000, wy - 7_000, .00008)
 
 		const mountainness =
-			smoothstep(uplift, .45, .72)
+			oldSmoothstep(uplift, .45, .72)
 
 		// broad landscape
 		const macro =
@@ -148,7 +148,7 @@ export class Oracle {
 			(distance - shore) / (1 - shore),
 		)
 
-		return 1 - smoothstep(t, 0, 1)
+		return 1 - oldSmoothstep(t, 0, 1)
 	}
 
 	normal(p: Worldspace2) {

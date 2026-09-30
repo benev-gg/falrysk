@@ -1,4 +1,4 @@
-import {smoothstep} from "../../../lib/tools/smoothstep.js"
+import {oldSmoothstep} from "../../../lib/tools/math.js"
 import {makeNoise, makeRand} from "../../../lib/tools/rand.js"
 
 import {surveySize} from "./consts.js"
@@ -447,7 +447,7 @@ export function makeBedrock(
 
 		const island =
 			1 -
-			smoothstep(
+			oldSmoothstep(
 				islandDistance,
 				.70,
 				1.02,
@@ -465,7 +465,7 @@ export function makeBedrock(
 
 		const edgeFade =
 			1 -
-			smoothstep(
+			oldSmoothstep(
 				edgeDistance,
 				.91,
 				1,
@@ -529,7 +529,7 @@ export function makeBedrock(
 
 		const acrossMask =
 			1 -
-			smoothstep(
+			oldSmoothstep(
 				Math.abs(across),
 				ridge.width * .20,
 				ridge.width * 1.65,
@@ -537,7 +537,7 @@ export function makeBedrock(
 
 		const alongMask =
 			1 -
-			smoothstep(
+			oldSmoothstep(
 				Math.abs(along),
 				ridge.halfLength * .72,
 				ridge.halfLength,
@@ -633,7 +633,7 @@ export function makeBedrock(
 				)
 
 			const foot =
-				smoothstep(
+				oldSmoothstep(
 					body,
 					0,
 					.16,
@@ -746,7 +746,7 @@ export function makeBedrock(
 				)
 
 			const cone =
-				smoothstep(
+				oldSmoothstep(
 					body,
 					0,
 					.12,
@@ -767,7 +767,7 @@ export function makeBedrock(
 
 			volcanic -=
 				volcano.craterDepth *
-				smoothstep(
+				oldSmoothstep(
 					craterBody,
 					0,
 					.35,

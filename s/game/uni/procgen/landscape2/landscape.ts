@@ -1,23 +1,13 @@
 
-import {count2d, hash32, pipe, Pipe} from "@e280/stz"
 import {clamp, lerp, remap} from "@benev/math"
+import {count2d, hash32, pipe} from "@e280/stz"
+
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
+import {invert, smootherstep} from "../../../../lib/tools/math.js"
 import {Worldspace2, Worldspace3} from "../../coords/worldspace.js"
 
 export type Landscape = ReturnType<typeof makeLandscape>
-
-function invert(x: number) {
-	return 1 - x
-}
-
-function smoothstep(x: number) {
-	return x * x * (3 - (2 * x))
-}
-
-function smootherstep(x: number) {
-	return x * x * x * (x * (x * 6 - 15) + 10)
-}
 
 export function makeLandscape(params: LandscapeParams) {
 	const rand = makeRand("landscape.rand", params.seed)
