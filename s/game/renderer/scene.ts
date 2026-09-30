@@ -1,5 +1,4 @@
 
-import {rand32, time} from "@e280/stz"
 import {degrees, Rect, Vec2} from "@benev/math"
 import {addToScene, createHemisphericLight, registerScene} from "@babylonjs/lite"
 
@@ -21,14 +20,14 @@ export async function setupScene(realm: Realm) {
 	scene.camera = realm.gimbal.camera
 	
 	const landscape = makeLandscape({
-		seed: 1, // Math.floor(Date.now() / time.days(1)),
-		size: Worldspace2.all(consts.worldSize),
+		seed: 12, // Math.floor(Date.now() / time.days(1)),
+		size: Worldspace2.all(consts.world.size),
 	})
 
 	const size = landscape.getSize()
 	const middle = size.dup().divBy(2).addZ()
 	const material = makeMaterial(.8, .5, 0)
-	const water = makeMaterial(.1, .2, .5)
+	const water = makeMaterial(.1, .2, .5, .8)
 
 	realm.gimbal.position = middle
 	realm.gimbal.radius = 30_000
@@ -40,11 +39,11 @@ export async function setupScene(realm: Realm) {
 		engine,
 		material,
 		landscape,
-		resolution: Vec2.new(256, 256),
+		resolution: Vec2.all(consts.world.resolution),
 		rect: new Rect(Worldspace2.zero(), size),
 	}))
 
-	const sea = makeSea(engine, water, consts.worldSize)
+	const sea = makeSea(engine, water, consts.world.size)
 	sea.position.copyFrom(middle.toBabylon())
 	addToScene(scene, sea)
 

@@ -2,8 +2,12 @@
 import {deep} from "@e280/stz"
 
 export const consts = deep.freeze({
+	world: {
+		resolution: 512,
+		size: 32_768,
+		// size: 8192,
+	},
 	base: "https://benev.gg/falrysk",
-	worldSize: 32_768,
 	simulationHz: 60,
 	workers: {
 		render: "./renderer.worker.bundle.min.js",

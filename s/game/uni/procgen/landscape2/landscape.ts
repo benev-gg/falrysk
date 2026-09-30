@@ -13,9 +13,6 @@ export function makeLandscape(params: LandscapeParams) {
 	const rand = makeRand("landscape.rand", params.seed)
 	const noise = makeNoise("landscape.noise", params.seed)
 	const center = params.size.dup().half()
-	const h1 = hash32("h1")
-	const h2 = hash32("h2")
-	const h3 = hash32("h3")
 
 	const percent = (p: number) => (p / 100) * params.size.x
 
@@ -34,21 +31,47 @@ export function makeLandscape(params: LandscapeParams) {
 	const sample = (w: Worldspace2, scale: number, offset = 0) =>
 		noise(w.x + offset, w.y + offset, 1 / scale)
 
-	const warp = (w: Worldspace2, scale: number, strength: number) => {
-		const x = strength * sample(w, scale, 12345)
-		const y = strength * sample(w, scale, 67890)
-		return w.dup().add_(x, y)
-	}
+	const warp = (() => {
+		const secondaryOffset = hash32("landscape.warp.secondaryOffset")
+		return (w: Worldspace2, offset: number, scale: number, strength: number) => {
+			const x = strength * (sample(w, scale, offset) - 0.5)
+			const y = strength * (sample(w, scale, offset + secondaryOffset) - 0.5)
+			return w.dup().add_(x, y)
+		}
+	})()
+
+	const getRuggedness = (() => {
+		const s = hash32("landscape.ruggedness")
+		return (w: Worldspace2) => clamp(sample(w, 10_000, s) ** 2)
+	})()
+
+	const getIslandness = (() => {
+		const offset1 = hash32("landscape.islandness.offset1")
+		const offset2 = hash32("landscape.islandness.offset2")
+		const offset3 = hash32("landscape.islandness.offset3")
+		const offset4 = hash32("landscape.islandness.offset4")
+		return (w: Worldspace2, fatness: number) => {
+			const rugged = getRuggedness(w)
+			const gradient = radialGradientSq(
+				pipe(w)
+					.to(w => warp(w, offset1, 500, lerp(rugged, 0, 400)))
+					.to(w => warp(w, offset2, 1_500, lerp(rugged, 0, 1100)))
+					.to(w => warp(w, offset3, 3_000, percent(6)))
+					.to(w => warp(w, offset4, 8_000, percent(12)))
+					.done()
+			)
+			return remap(
+				gradient,
+				invert(fatness), 1,
+				0, 1,
+			)
+		}
+	})()
 
 	function getElevation(w: Worldspace2) {
-		const gradient = radialGradientSq(
-			pipe(w)
-				.to(w => warp(w, 8_000, percent(12)))
-				.to(w => warp(w, 3_000, percent(6)))
-				.done()
-		)
-		const island = gradient > 0.7 ? 10 : -10
-		return forceSunkenEdge(w, -10, island)
+		const peak = 100
+		const island = lerp(getIslandness(w, 0.6), 0, peak)
+		return forceSunkenEdge(w, -peak, island)
 	}
 
 	function getNormal(w: Worldspace2) {
@@ -62,6 +85,7 @@ export function makeLandscape(params: LandscapeParams) {
 		return new Worldspace3(-dx, -dy, 2 * d).normalize()
 	}
 
+	// console log stats
 	{
 		const resolution = 1000
 
