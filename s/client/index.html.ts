@@ -13,6 +13,8 @@ export default template(import.meta.url, async orb => html`
 			<meta name="viewport" content="width=device-width,initial-scale=1"/>
 			<meta name="darkreader-lock"/>
 
+			<meta name="version" content="${orb.packageVersion()}"/>
+
 			<title>falrysk</title>
 			<link rel="icon" href="${asset("favicon.png")}"/>
 			<script type="module" src="${orb.hashurl("main.bundle.min.js")}"></script>
