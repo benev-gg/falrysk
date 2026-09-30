@@ -5,7 +5,7 @@ export const consts = deep.freeze({
 	world: {
 		resolution: 512,
 		size: 32_768,
-		// size: 8192,
+		// size: 4_000,
 	},
 	base: "https://benev.gg/falrysk",
 	simulationHz: 60,

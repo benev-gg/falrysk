@@ -1,4 +1,5 @@
 
+import {rand32} from "@e280/stz"
 import {degrees, Rect, Vec2} from "@benev/math"
 import {addToScene, createHemisphericLight, registerScene} from "@babylonjs/lite"
 
@@ -20,7 +21,8 @@ export async function setupScene(realm: Realm) {
 	scene.camera = realm.gimbal.camera
 	
 	const landscape = makeLandscape({
-		seed: 12, // Math.floor(Date.now() / time.days(1)),
+		// seed: Math.floor(Date.now() / time.days(1)),
+		seed: rand32(),
 		size: Worldspace2.all(consts.world.size),
 	})
 

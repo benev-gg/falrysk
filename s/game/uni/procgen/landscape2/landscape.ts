@@ -1,5 +1,5 @@
 
-import {clamp, lerp, remap} from "@benev/math"
+import {between, clamp, lerp, remap, spline} from "@benev/math"
 import {count2d, hash32, pipe} from "@e280/stz"
 
 import {LandscapeParams} from "./types.js"
@@ -45,33 +45,57 @@ export function makeLandscape(params: LandscapeParams) {
 		return (w: Worldspace2) => clamp(sample(w, 10_000, s) ** 2)
 	})()
 
-	const getIslandness = (() => {
+	const getIslandGradient = (() => {
 		const offset1 = hash32("landscape.islandness.offset1")
 		const offset2 = hash32("landscape.islandness.offset2")
 		const offset3 = hash32("landscape.islandness.offset3")
 		const offset4 = hash32("landscape.islandness.offset4")
-		return (w: Worldspace2, fatness: number) => {
+		return (w: Worldspace2) => {
 			const rugged = getRuggedness(w)
-			const gradient = radialGradientSq(
+			return radialGradientSq(
 				pipe(w)
-					.to(w => warp(w, offset1, 500, lerp(rugged, 0, 400)))
-					.to(w => warp(w, offset2, 1_500, lerp(rugged, 0, 1100)))
+					.to(w => warp(w, offset1, 500, lerp(rugged, 0, percent(1))))
+					.to(w => warp(w, offset2, 1_500, lerp(rugged, 0, percent(3))))
 					.to(w => warp(w, offset3, 3_000, percent(6)))
 					.to(w => warp(w, offset4, 8_000, percent(12)))
 					.done()
 			)
-			return remap(
-				gradient,
-				invert(fatness), 1,
-				0, 1,
+		}
+	})()
+
+	const getIsletsGradient = (() => {
+		const offset1 = hash32("landscape.islets.offset1")
+		const offset2 = hash32("landscape.islets.offset2")
+		return (w: Worldspace2, gradient: number, shoreline: number) => {
+			const offshore = remap(gradient, shoreline / 2, shoreline, 1, 0)
+			const chance = spline.ezLinear(offshore, [0, 1, 1, 0])
+			const islets = (
+				chance *
+				sample(w, percent(10), offset1) *
+				sample(w, percent(40), offset2)
 			)
+			return remap(islets, 0.5, 1)
 		}
 	})()
 
 	function getElevation(w: Worldspace2) {
-		const peak = 100
-		const island = lerp(getIslandness(w, 0.6), 0, peak)
-		return forceSunkenEdge(w, -peak, island)
+		const peak = 500
+		const isletsPeak = 50
+		const shoreline = 0.4
+
+		const gradient = getIslandGradient(w)
+		const islandCore = remap(gradient, shoreline, 1)
+		const island = lerp(islandCore, 0, peak)
+
+		const isletsGradient = getIsletsGradient(w, gradient, shoreline)
+		const islets = isletsGradient * (
+			isletsGradient > -0.05
+				? isletsPeak
+				: peak
+		)
+
+		const final = Math.max(island, islets)
+		return forceSunkenEdge(w, -peak, final)
 	}
 
 	function getNormal(w: Worldspace2) {
