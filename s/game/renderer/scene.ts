@@ -22,6 +22,7 @@ export async function setupScene(realm: Realm) {
 	scene.camera = realm.gimbal.camera
 	
 	const landscape = makeLandscape({
+		// seed: 1,
 		// seed: Math.floor(Date.now() / time.days(1)),
 		seed: rand32(),
 		size: Worldspace2.all(consts.world.size),

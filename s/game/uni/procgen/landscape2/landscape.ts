@@ -1,10 +1,10 @@
 
 import {hash32, pipe} from "@e280/stz"
-import {clamp, lerp, remap, spline} from "@benev/math"
+import {clamp, lerp, remap, spline, sum} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
-import {invert, smootherstep} from "../../../../lib/tools/math.js"
+import {average, invert, smootherstep} from "../../../../lib/tools/math.js"
 import {Worldspace2, Worldspace3} from "../../coords/worldspace.js"
 
 export type Landscape = ReturnType<typeof makeLandscape>
@@ -78,23 +78,87 @@ export function makeLandscape(params: LandscapeParams) {
 		}
 	})()
 
+	const getRidges = (() => {
+		const ridgeline1 = hash32("landscape.ridges.ridgeline1")
+		const ridgeline2 = hash32("landscape.ridges.ridgeline2")
+
+		const warp1 = hash32("landscape.ridges.warp1")
+		const warp2 = hash32("landscape.ridges.warp2")
+
+		const offset1 = hash32("landscape.ridges.offset1")
+		const warbleSeed = hash32("landscape.ridges.warble")
+		const regionsOffset1 = hash32("landscape.ridges.regions1")
+
+		const seed1 = hash32("landscape.ridges.seed1")
+		const seed2 = hash32("landscape.ridges.seed2")
+		const seed3 = hash32("landscape.ridges.seed3")
+
+		const damageOffset = hash32("landscape.ridges.damage")
+		const jaggedOffset = hash32("landscape.ridges.jagged")
+
+		const subridges = (w: Worldspace2, scale: number, seed: number) => {
+			const w1 = warp(w, seed + warp1, 10_000, 10_000)
+			const n = sample(w1, scale, seed + offset1)
+			return 1 - Math.abs(n * 2 - 1)
+		}
+
+		const getRegions = (w: Worldspace2, scale: number, seed: number) => {
+			return sample(w, scale, seed) ** 2
+		}
+
+		const applyDamage = (w: Worldspace2, mass: number, intensity: number) => {
+			const damage = sample(w, 2_500, damageOffset)
+			return mass * (1 - damage * intensity)
+		}
+
+		return (w: Worldspace2, landmassGradient: number, peak: number) => {
+			const warble = getRegions(w, 10_000, warbleSeed)
+
+			const w1 = pipe(w)
+				.to(w => warp(w, warp1 + seed1, 500, lerp(warble, 0, 100)))
+				.to(w => warp(w, warp1 + seed2, 3000, lerp(warble, 0, 500)))
+				.to(w => warp(w, warp1 + seed3, 10_000, 3_000))
+				.done()
+
+			const w2 = pipe(w)
+				.to(w => warp(w, warp2 + seed1, 500, lerp(warble, 0, 100)))
+				.to(w => warp(w, warp2 + seed2, 3000, lerp(warble, 0, 500)))
+				.to(w => warp(w, warp2 + seed3, 10_000, 10_000))
+				.done()
+
+			const r1 = clamp(subridges(w1, 12000, ridgeline1))
+			const r2 = clamp(subridges(w2, 8000, ridgeline2)) / 2
+
+			const regions = getRegions(w, 15_000, regionsOffset1)
+			const jagged = warble * sample(w, 250, jaggedOffset) * 0.02
+
+			const mass = Math.max(0, average(r1, r2) * 2)
+			const damaged = applyDamage(w, mass + jagged, 0.5)
+
+			return peak * regions * landmassGradient * damaged
+		}
+	})()
+
 	function getElevation(w: Worldspace2) {
 		const peak = 500
 		const isletsPeak = 50
 		const shoreline = 0.4
 
-		const gradient = getIslandGradient(w)
-		const islandCore = remap(gradient, shoreline, 1)
+		const islandGradient = getIslandGradient(w)
+		const islandCore = remap(islandGradient, shoreline, 1)
 		const island = lerp(islandCore, 0, peak)
 
-		const isletsGradient = getIsletsGradient(w, gradient, shoreline)
+		const landmassGradient = remap(islandGradient, shoreline, 1)
+		const ridges = getRidges(w, landmassGradient, 2000)
+
+		const isletsGradient = getIsletsGradient(w, islandGradient, shoreline)
 		const islets = isletsGradient * (
 			isletsGradient > -0.05
 				? isletsPeak
 				: peak
 		)
 
-		const final = Math.max(island, islets)
+		const final = Math.max(island + ridges, islets)
 		return forceSunkenEdge(w, -peak, final)
 	}
 
