@@ -10,6 +10,7 @@ import {makeTerrain} from "./parts/make-terrain.js"
 import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
 import {makeLandscape} from "../uni/procgen/landscape2/landscape.js"
+import {logLandscapeStats} from "../uni/procgen/landscape2/stats.js"
 
 export async function setupScene(realm: Realm) {
 	const {scene, engine} = realm
@@ -25,6 +26,8 @@ export async function setupScene(realm: Realm) {
 		seed: rand32(),
 		size: Worldspace2.all(consts.world.size),
 	})
+
+	logLandscapeStats(landscape)
 
 	const size = landscape.getSize()
 	const middle = size.dup().divBy(2).addZ()

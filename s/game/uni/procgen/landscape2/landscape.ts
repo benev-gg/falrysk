@@ -1,6 +1,6 @@
 
-import {between, clamp, lerp, remap, spline} from "@benev/math"
-import {count2d, hash32, pipe} from "@e280/stz"
+import {hash32, pipe} from "@e280/stz"
+import {clamp, lerp, remap, spline} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
@@ -107,36 +107,6 @@ export function makeLandscape(params: LandscapeParams) {
 			getElevation(new Worldspace2(w.x, w.y + d)) -
 			getElevation(new Worldspace2(w.x, w.y - d))
 		return new Worldspace3(-dx, -dy, 2 * d).normalize()
-	}
-
-	// console log stats
-	{
-		const resolution = 1000
-
-		let w = Worldspace2.zero()
-		let landCount = 0
-
-		for (let [x, y] of count2d([resolution, resolution])) {
-			const elevation = getElevation(
-				w.set_(
-					(x / resolution) * params.size.x,
-					(y / resolution) * params.size.y,
-				)
-			)
-
-			if (elevation > 0)
-				landCount++
-		}
-
-		const landFraction = landCount / (resolution * resolution)
-		const worldSquareMeters = params.size.x * params.size.y
-		const landSquareMeters = landFraction * worldSquareMeters
-		const landSquareKm = landSquareMeters / 1_000_000
-		const worldSquareKm = worldSquareMeters / 1_000_000
-		const oceanSquareKm = worldSquareKm - landSquareKm
-
-		console.log("land square km", landSquareKm.toFixed(1))
-		console.log("ocean square km", oceanSquareKm.toFixed(1))
 	}
 
 	return {
