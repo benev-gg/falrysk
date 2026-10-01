@@ -1,7 +1,7 @@
 
 import {rand32} from "@e280/stz"
 import {degrees, Rect, Vec2} from "@benev/math"
-import {addToScene, createHemisphericLight, registerScene} from "@babylonjs/lite"
+import {addToScene, createHemisphericLight, enableStandardVertexColors, registerScene} from "@babylonjs/lite"
 
 import {Realm} from "./realm.js"
 import {consts} from "../../consts.js"
@@ -11,6 +11,8 @@ import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
 import {makeLandscape} from "../uni/procgen/landscape/landscape.js"
 import {logLandscapeStats} from "../uni/procgen/landscape/stats.js"
+
+enableStandardVertexColors()
 
 export async function setupScene(realm: Realm) {
 	const {scene, engine} = realm
@@ -32,7 +34,7 @@ export async function setupScene(realm: Realm) {
 
 	const size = landscape.getSize()
 	const middle = size.dup().divBy(2).addZ()
-	const material = makeMaterial(.8, .5, 0)
+	const material = makeMaterial(.8, .8, .8)
 	const water = makeMaterial(.1, .2, .5, .8)
 
 	realm.gimbal.position = middle
