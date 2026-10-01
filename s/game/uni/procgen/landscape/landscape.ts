@@ -1,10 +1,9 @@
 
 import {hash32, pipe} from "@e280/stz"
-import {clamp, lerp, linear, remap} from "@benev/math"
+import {clamp, lerp, average, invert, smootherstep, linear, remap} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
-import {average, invert, smootherstep} from "../../../../lib/tools/math.js"
 import {Worldspace2, Worldspace3} from "../../coords/worldspace.js"
 
 export type Landscape = ReturnType<typeof makeLandscape>
