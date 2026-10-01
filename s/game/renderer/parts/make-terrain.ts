@@ -15,6 +15,7 @@ export function makeTerrain(options: {
 		resolution: Vec2
 	}) {
 
+	const timeStart = performance.now()
 	const {engine, material, rect, landscape, resolution} = options
 
 	// vertices
@@ -78,6 +79,8 @@ export function makeTerrain(options: {
 	)
 
 	mesh.material = material
+
+	console.log(`makeTerrain ${(performance.now() - timeStart).toFixed(1)}ms`)
 	return mesh
 }
 

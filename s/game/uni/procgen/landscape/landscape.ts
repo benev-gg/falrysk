@@ -1,6 +1,6 @@
 
 import {hash32, pipe} from "@e280/stz"
-import {clamp, lerp, remap, spline, sum} from "@benev/math"
+import {clamp, lerp, remap, spline} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
@@ -10,6 +10,8 @@ import {Worldspace2, Worldspace3} from "../../coords/worldspace.js"
 export type Landscape = ReturnType<typeof makeLandscape>
 
 export function makeLandscape(params: LandscapeParams) {
+	const timeStart = performance.now()
+
 	const rand = makeRand("landscape.rand", params.seed)
 	const noise = makeNoise("landscape.noise", params.seed)
 	const center = params.size.dup().half()
@@ -172,6 +174,8 @@ export function makeLandscape(params: LandscapeParams) {
 			getElevation(new Worldspace2(w.x, w.y - d))
 		return new Worldspace3(-dx, -dy, 2 * d).normalize()
 	}
+
+	console.log(`makeLandscape ${(performance.now() - timeStart).toFixed(1)}ms`)
 
 	return {
 		getElevation,

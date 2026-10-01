@@ -29,7 +29,7 @@ export function logLandscapeStats(landscape: Landscape, ) {
 	const worldSquareKm = worldSquareMeters / 1_000_000
 	const oceanSquareKm = worldSquareKm - landSquareKm
 
-	console.log("land", landSquareKm.toFixed(0), "km²")
-	console.log("ocean", oceanSquareKm.toFixed(0), "km²")
+	console.log(`land ${landSquareKm.toFixed(0)}km²`)
+	console.log(`sea  ${oceanSquareKm.toFixed(0)}km²`)
 }
 
