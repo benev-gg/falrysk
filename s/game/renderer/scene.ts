@@ -9,8 +9,8 @@ import {makeSea} from "./parts/make-sea.js"
 import {makeTerrain} from "./parts/make-terrain.js"
 import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
-import {makeLandscape} from "../uni/procgen/landscape2/landscape.js"
-import {logLandscapeStats} from "../uni/procgen/landscape2/stats.js"
+import {makeLandscape} from "../uni/procgen/landscape/landscape.js"
+import {logLandscapeStats} from "../uni/procgen/landscape/stats.js"
 
 export async function setupScene(realm: Realm) {
 	const {scene, engine} = realm

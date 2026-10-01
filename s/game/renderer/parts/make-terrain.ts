@@ -5,7 +5,7 @@ import {makeId} from "@benev/archimedes"
 import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
 import {Worldspace2} from "../../uni/coords/worldspace.js"
-import {Landscape} from "../../uni/procgen/landscape2/landscape.js"
+import {Landscape} from "../../uni/procgen/landscape/landscape.js"
 
 export function makeTerrain(options: {
 		engine: EngineContext
