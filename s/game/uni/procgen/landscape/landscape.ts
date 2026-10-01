@@ -1,6 +1,6 @@
 
 import {hash32, pipe} from "@e280/stz"
-import {clamp, lerp, remap, spline} from "@benev/math"
+import {clamp, lerp, linear, remap} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
@@ -68,14 +68,19 @@ export function makeLandscape(params: LandscapeParams) {
 	const getIsletsGradient = (() => {
 		const offset1 = hash32("landscape.islets.offset1")
 		const offset2 = hash32("landscape.islets.offset2")
+		const linearPoints = [0, 1, 1, 0]
+
 		return (w: Worldspace2, gradient: number, shoreline: number) => {
 			const offshore = remap(gradient, shoreline / 2, shoreline, 1, 0)
-			const chance = spline.ezLinear(offshore, [0, 1, 1, 0])
+			const chance = linear(offshore, linearPoints)
+			if (chance <= 0) return -1
+
 			const islets = (
 				chance *
 				sample(w, percent(10), offset1) *
 				sample(w, percent(40), offset2)
 			)
+
 			return remap(islets, 0.5, 1)
 		}
 	})()
@@ -145,6 +150,10 @@ export function makeLandscape(params: LandscapeParams) {
 		const peak = 500
 		const isletsPeak = 50
 		const shoreline = 0.4
+		const outsideTheGradient = radialGradientSq(w) <= 0
+
+		if (outsideTheGradient)
+			return -peak
 
 		const islandGradient = getIslandGradient(w)
 		const islandCore = remap(islandGradient, shoreline, 1)

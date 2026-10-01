@@ -18,18 +18,20 @@ export function makeTerrain(options: {
 	const timeStart = performance.now()
 	const {engine, material, rect, landscape, resolution} = options
 
-	// vertices
 	const vertexCount = resolution.x * resolution.y
+
+	// vertex position
 	const positions = new Float32Array(vertexCount * 3)
-	const normals = new Float32Array(vertexCount * 3)
 	{
+		const coord = new Worldspace2()
+
 		let index = 0
 		for (const [column, row] of count2d(resolution.array())) {
 			const i = index++
 			const offset = i * 3
 
-			const coord = Worldspace2
-				.new(column, row)
+			coord
+				.set_(column, row)
 				.div(resolution.dup().sub_(1, 1))
 				.mul(rect.size())
 				.add(rect.min)
@@ -38,12 +40,42 @@ export function makeTerrain(options: {
 				.addZ(landscape.getElevation(coord))
 				.toBabylon()
 
-			const normal = landscape
-				.getNormal(coord)
-				.toBabylon()
-
 			positions.set([position.x, position.y, position.z], offset)
-			normals.set([normal.x, normal.y, normal.z], offset)
+		}
+	}
+
+	// vertex normal
+	const normals = new Float32Array(vertexCount * 3)
+	{
+		const width = resolution.x
+		const height = resolution.y
+		const size = rect.size()
+		const stepX = size.x / (width - 1)
+		const stepY = size.y / (height - 1)
+
+		const elevation = (x: number, y: number) =>
+			positions[(y * width + x) * 3 + 1]
+
+		for (const [x, y] of count2d(resolution.array())) {
+			const left = Math.max(0, x - 1)
+			const right = Math.min(width - 1, x + 1)
+			const below = Math.max(0, y - 1)
+			const above = Math.min(height - 1, y + 1)
+
+			const dx = (
+				elevation(right, y) - elevation(left, y)
+			) / ((right - left) * stepX)
+
+			const dy = (
+				elevation(x, above) - elevation(x, below)
+			) / ((above - below) * stepY)
+
+			const length = Math.hypot(dx, 1, dy)
+			const offset = (y * width + x) * 3
+
+			normals[offset] = -dx / length
+			normals[offset + 1] = 1 / length
+			normals[offset + 2] = -dy / length
 		}
 	}
 
