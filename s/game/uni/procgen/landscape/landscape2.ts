@@ -1,5 +1,5 @@
 
-import {invert, lerp, Vec4} from "@benev/math"
+import {lerp, Vec4} from "@benev/math"
 import {lsBedrock} from "./ls/bedrock.js"
 import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
@@ -43,11 +43,15 @@ export function makeLandscape(params: LandscapeParams) {
 	}
 
 	function getDebugColor(w: Worldspace2) {
-		const bedrock = lsBedrock(tools, w)
-		const relief = lsRelief(tools, w)
-		const mountainous = relief * bedrock
-		const x = invert(mountainous)
-		return debugColor.set_(1, x, x, 1)
+		return debugColor.set_(1, 1, 1, 1)
+
+		// const bedrock = lsBedrock(tools, w)
+		// const relief = lsRelief(tools, w)
+		// const land = lsLand(tools, bedrock, sealevel)
+		// const landform = lsLandform(tools, w, land)
+		// const mountainous = relief * landform
+		// const x = invert(mountainous)
+		// return debugColor.set_(1, x, x, 1)
 	}
 
 	console.log(`makeLandscape ${(performance.now() - timeStart).toFixed(1)}ms`)
