@@ -1,11 +1,12 @@
 
-import {hash32} from "@e280/stz"
-import {clamp, invert, lerp, remap, smooth, Vec4} from "@benev/math"
+import {invert, lerp, Vec4} from "@benev/math"
+import {lsBedrock} from "./ls/bedrock.js"
 import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
-import {lsIslandness} from "./ls/islandness.js"
+import {lsMountains} from "./ls/mountains.js"
 import {Worldspace2} from "../../coords/worldspace.js"
 import {makeRand} from "../../../../lib/tools/rand.js"
+import {lsBathymetry, lsLand, lsLandform, lsRelief} from "./ls/landform.js"
 
 export type Landscape = ReturnType<typeof makeLandscape>
 
@@ -15,48 +16,38 @@ export function makeLandscape(params: LandscapeParams) {
 	const tools = new LandscapeTools(params)
 
 	const rand = makeRand("landscape.rand", params.seed)
-	const bedrockOffset = hash32("landscape.bedrock")
-	const coastalOffset = hash32("landscape.coastal")
+	const shorelift = 1 // meters
+	const seafloor = -500 // meters
+	const basementHeight = 500 // meters
+	const mountainHeight = 2500 // meters
 
-	const waterlevel = rand.range(.3, .6)
-	const seafloor = 500
-	const bedrockHeight = 500
-
-	const sampleRelief = (w: Worldspace2) => (
-		tools.sample(w, tools.percent(25), bedrockOffset)
-	)
-
-	const sampleCoastal = (w: Worldspace2) => (
-		tools.sample(w, tools.percent(25), coastalOffset)
-	)
+	const sealevel = rand.range(.3, .6) // noul along bedrock gradient
 
 	function getElevation(w: Worldspace2) {
-		const islandness = lsIslandness(tools, w)
-		const relief = lerp(sampleRelief(w), bedrockHeight / 10, bedrockHeight)
-		const shorelift = 1
+		const bedrock = lsBedrock(tools, w)
+		const relief = lsRelief(tools, w)
+		const reliefHeight = lerp(relief, basementHeight / 10, basementHeight)
+		const land = lsLand(tools, bedrock, sealevel)
+		const landform = lsLandform(tools, w, land)
 
-		if (islandness < waterlevel) {
-			return shorelift + remap(islandness, 0, waterlevel, -seafloor, 0)
-		}
-		else {
-			const land = remap(islandness, waterlevel, 1)
-			const shaped = smooth(land, [
-				0,
-				lerp(sampleCoastal(w) ** 3, .1, .9),
-				1,
-			])
-			return shorelift + (relief * shaped)
-		}
+		const basement = shorelift + (
+			(bedrock < sealevel)
+				? lsBathymetry(tools, bedrock, sealevel, seafloor)
+				: reliefHeight * landform
+		)
+
+		const mountainous = relief * landform
+		const mountains = mountainHeight * lsMountains(tools, w, mountainous)
+
+		return basement + mountains
 	}
 
 	function getDebugColor(w: Worldspace2) {
-		return debugColor.set_(1, 1, 1, 1)
-
-		// const coastal = sampleCoastal(w)
-		// return debugColor.set_(1, invert(coastal), invert(coastal), 1)
-
-		// const bedrock = sampleRelief(w)
-		// return debugColor.set_(bedrock, invert(bedrock), 0, 1)
+		const bedrock = lsBedrock(tools, w)
+		const relief = lsRelief(tools, w)
+		const mountainous = relief * bedrock
+		const x = invert(mountainous)
+		return debugColor.set_(1, x, x, 1)
 	}
 
 	console.log(`makeLandscape ${(performance.now() - timeStart).toFixed(1)}ms`)

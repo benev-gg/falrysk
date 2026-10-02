@@ -5,12 +5,12 @@ import {LandscapeTools} from "../tools.js"
 import {Worldspace2} from "../../../coords/worldspace.js"
 
 const spline = [0, 1, 1, 1]
-const offset = hash32("ls.islandness")
+const offset = hash32("ls.bedrock")
 
-const offsetChaos = hash32("ls.islandness.chaos")
-const offsetStretchy = hash32("ls.islandness.stretchy")
+const offsetChaos = hash32("ls.bedrock.chaos")
+const offsetStretchy = hash32("ls.bedrock.stretchy")
 
-export const lsIslandness = LandscapeTools.fn(
+export const lsBedrock = LandscapeTools.fn(
 	(tools, w: Worldspace2) => {
 		const {warp, percent} = tools
 
