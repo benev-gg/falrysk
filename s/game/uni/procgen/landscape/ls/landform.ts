@@ -1,6 +1,6 @@
 
 import {hash32} from "@e280/stz"
-import {lerp, remap, smooth} from "@benev/math"
+import {lerp, remap, smoothly} from "@benev/math"
 import {LandscapeTools} from "../tools.js"
 import {Worldspace2} from "../../../coords/worldspace.js"
 
@@ -26,7 +26,7 @@ export const lsLand = LandscapeTools.fn(
 export const lsLandform = LandscapeTools.fn(
 	(tools, w: Worldspace2, land: number) => {
 		const inlandy = tools.sample(w, tools.percent(25), inlandyOffset) ** 3
-		return smooth(land, [
+		return smoothly(land, [
 			0,
 			lerp(inlandy, .1, .9),
 			1,

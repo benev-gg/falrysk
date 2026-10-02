@@ -1,6 +1,6 @@
 
 import {hash32} from "@e280/stz"
-import {clamp, invert, lerp} from "@benev/math"
+import {clamp, invert, lerp, stronger, weaker} from "@benev/math"
 
 import {LandscapeTools} from "../tools.js"
 import {Worldspace2} from "../../../coords/worldspace.js"
@@ -15,16 +15,6 @@ const offsetE3 = hash32("ls.mountains.e3")
 const offsetAttenuate = hash32("ls.mountains.attenuate")
 
 const ridge = (n: number) => 1 - Math.abs(n * 2 - 1)
-
-function stronger(noul: number, power = 2) {
-	noul = invert(noul)
-	noul = noul ** power
-	return invert(noul)
-}
-
-function weaker(noul: number, power = 2) {
-	return noul ** power
-}
 
 export const lsMountains = LandscapeTools.fn(
 	({warp, sample}, w: Worldspace2, mountainous: number) => {

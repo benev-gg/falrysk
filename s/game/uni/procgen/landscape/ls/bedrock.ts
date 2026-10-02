@@ -1,6 +1,6 @@
 
 import {hash32} from "@e280/stz"
-import {clamp, invert, remap, smooth} from "@benev/math"
+import {clamp, invert, remap, smoothly} from "@benev/math"
 import {LandscapeTools} from "../tools.js"
 import {Worldspace2} from "../../../coords/worldspace.js"
 
@@ -15,7 +15,7 @@ export const lsBedrock = LandscapeTools.fn(
 		const {warp, percent} = tools
 
 		const baseGradient = tools.radialGradient(w)
-		const mask = smooth(baseGradient, spline)
+		const mask = smoothly(baseGradient, spline)
 
 		const chaos = clamp(remap(tools.sample(w, percent(30), offsetChaos), 0, 0.5))
 		const stretchy = tools.sample(w, percent(30), offsetStretchy)

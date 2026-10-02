@@ -1,6 +1,6 @@
 
 import {hash32, pipe} from "@e280/stz"
-import {clamp, lerp, average, invert, smootherstep, linear, remap} from "@benev/math"
+import {clamp, lerp, average, invert, smootherstep, linearly, remap} from "@benev/math"
 
 import {LandscapeParams} from "./types.js"
 import {makeNoise, makeRand} from "../../../../lib/tools/rand.js"
@@ -71,7 +71,7 @@ export function makeLandscape(params: LandscapeParams) {
 
 		return (w: Worldspace2, gradient: number, shoreline: number) => {
 			const offshore = remap(gradient, shoreline / 2, shoreline, 1, 0)
-			const chance = linear(offshore, linearPoints)
+			const chance = linearly(offshore, linearPoints)
 			if (chance <= 0) return -1
 
 			const islets = (
