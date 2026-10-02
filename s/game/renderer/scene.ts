@@ -9,8 +9,8 @@ import {makeSea} from "./parts/make-sea.js"
 import {makeTerrain} from "./parts/make-terrain.js"
 import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
-import {makeLandscape} from "../uni/procgen/landscape/landscape.js"
 import {logLandscapeStats} from "../uni/procgen/landscape/stats.js"
+import {makeLandscape} from "../uni/procgen/landscape/landscape2.js"
 
 enableStandardVertexColors()
 
@@ -40,7 +40,7 @@ export async function setupScene(realm: Realm) {
 	realm.gimbal.position = middle
 	realm.gimbal.radius = 30_000
 	realm.gimbal.pitch = degrees(-30)
-	realm.gimbal.camera.nearPlane = 1
+	realm.gimbal.camera.nearPlane = 10
 	realm.gimbal.camera.farPlane = 50_000
 
 	addToScene(scene, makeTerrain({

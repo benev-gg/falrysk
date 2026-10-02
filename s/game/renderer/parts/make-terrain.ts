@@ -1,11 +1,11 @@
 
 import {count2d} from "@e280/stz"
-import {Rect, Vec2, Vec4} from "@benev/math"
 import {makeId} from "@benev/archimedes"
-import {createMeshFromData, EngineContext, Material, updateMeshColors} from "@babylonjs/lite"
+import {Rect, Vec2, Vec4} from "@benev/math"
+import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
 import {Worldspace2} from "../../uni/coords/worldspace.js"
-import {Landscape} from "../../uni/procgen/landscape/landscape.js"
+import {Landscape} from "../../uni/procgen/landscape/landscape2.js"
 
 export function makeTerrain(options: {
 		engine: EngineContext
@@ -106,7 +106,6 @@ export function makeTerrain(options: {
 	const colors = new Float32Array(vertexCount * 4)
 	{
 		const coord = new Worldspace2()
-		const baseColor = new Vec4(1, 1, 1, 1)
 
 		let index = 0
 		for (const [column, row] of count2d(resolution.array())) {
@@ -119,10 +118,10 @@ export function makeTerrain(options: {
 				.mul(rect.size())
 				.add(rect.min)
 
-			// const debugColor = landscape
-			// 	.getDebugColor(coord)
+			const debugColor = landscape
+				.getDebugColor(coord)
 
-			colors.set(baseColor.array(), offset)
+			colors.set(debugColor.array(), offset)
 		}
 	}
 
