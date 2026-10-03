@@ -1,13 +1,13 @@
 
-import {clamp, invert, lerp, Vec4} from "@benev/math"
+import {pipe} from "@e280/stz"
+import {clamp, lerp, Vec4} from "@benev/math"
 import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
 import {lsMountains} from "./ls/mountains.js"
+import {lsBigWarp, lsSmallWarp} from "./ls/warps.js"
 import {Worldspace2} from "../../coords/worldspace.js"
 import {makeRand} from "../../../../lib/tools/rand.js"
 import {lsBathymetry, lsLand, lsLandform, lsRelief} from "./ls/landform.js"
-import { lsBigWarp, lsSmallWarp } from "./ls/warps.js"
-import { pipe } from "@e280/stz"
 
 export type Landscape = ReturnType<typeof makeLandscape>
 
@@ -17,8 +17,8 @@ export function makeLandscape(params: LandscapeParams) {
 	const tools = new LandscapeTools(params)
 
 	const rand = makeRand("landscape.rand", params.seed)
-	const shorelift = 1 // meters
-	const seafloor = -500 // meters
+	const shorelift = 10 // meters
+	const seafloor = -1000 // meters
 	const basementHeight = 1000 // meters
 	const mountainHeight = 2000 // meters
 

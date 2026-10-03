@@ -39,9 +39,10 @@ export async function setupScene(realm: Realm) {
 
 	realm.gimbal.position = middle
 	realm.gimbal.radius = 30_000
-	realm.gimbal.pitch = degrees(-30)
+	realm.gimbal.pitch = degrees(-10)
+	realm.gimbal.camera.fov = degrees(60)
 	realm.gimbal.camera.nearPlane = 10
-	realm.gimbal.camera.farPlane = 50_000
+	realm.gimbal.camera.farPlane = 100_000
 
 	addToScene(scene, makeTerrain({
 		engine,
