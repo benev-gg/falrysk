@@ -7,9 +7,7 @@ import {Worldspace2} from "../../../coords/worldspace.js"
 const hasher = makeHasher("ls.landform")
 
 export const lsRelief = LandscapeTools.fn((tools, w: Worldspace2) => {
-	return (
-		tools.sample(w, 15_000, hasher("relief1"))
-	)
+	return tools.sample(w, 15_000, hasher("relief1"))
 })
 
 export const lsBathymetry = LandscapeTools.fn(

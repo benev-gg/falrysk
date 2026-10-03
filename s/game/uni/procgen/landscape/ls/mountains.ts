@@ -13,8 +13,8 @@ export const lsMountains = LandscapeTools.fn(
 		const r1 = ridge(sample(warped, 10_000, hasher("r1")))
 		const r2 = ridge(sample(unwarped, 3_000, hasher("r2")))
 		const ridges = (
-			(r1 * .7) +
-			(r2 * .3)
+			(r1 * .8) +
+			(r2 * .2)
 		)
 
 		const damagedRegion = sample(unwarped, 5_000, hasher("dmg"))

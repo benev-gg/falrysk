@@ -18,8 +18,8 @@ export function makeLandscape(params: LandscapeParams) {
 	const rand = makeRand("landscape.rand", params.seed)
 	const shorelift = 10 // meters
 	const seafloor = -1000 // meters
-	const basementHeight = 2000 // meters
-	const mountainHeight = 2000 // meters
+	const basementHeight = 1200 // meters
+	const mountainHeight = 2800 // meters
 
 	const sealevel = rand.range(.3, .6) // noul along bedrock gradient
 
