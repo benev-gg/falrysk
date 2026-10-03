@@ -1,6 +1,6 @@
 
 import {count2d} from "@e280/stz"
-import {Landscape} from "./landscape2.js"
+import {Landscape} from "./landscape.js"
 import {Worldspace2} from "../../coords/worldspace.js"
 
 export function logLandscapeStats(landscape: Landscape) {

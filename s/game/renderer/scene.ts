@@ -10,7 +10,7 @@ import {makeTerrain} from "./parts/make-terrain.js"
 import {makeMaterial} from "./parts/make-material.js"
 import {Worldspace2} from "../uni/coords/worldspace.js"
 import {logLandscapeStats} from "../uni/procgen/landscape/stats.js"
-import {makeLandscape} from "../uni/procgen/landscape/landscape2.js"
+import {makeLandscape} from "../uni/procgen/landscape/landscape.js"
 
 enableStandardVertexColors()
 
