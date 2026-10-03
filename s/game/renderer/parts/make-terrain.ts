@@ -1,7 +1,7 @@
 
 import {count2d} from "@e280/stz"
+import {Rect, Vec2} from "@benev/math"
 import {makeId} from "@benev/archimedes"
-import {Rect, Vec2, Vec4} from "@benev/math"
 import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
 import {Worldspace2} from "../../uni/coords/worldspace.js"

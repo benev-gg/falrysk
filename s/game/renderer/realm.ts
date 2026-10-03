@@ -1,7 +1,6 @@
 
 import {Vec2} from "@benev/math"
 import {disposer} from "@e280/stz"
-import {EntitiesReadonly} from "@benev/archimedes"
 import {createEngine, createSceneContext, disposeEngine, disposeScene, setEngineSize} from "@babylonjs/lite"
 
 import {Catalog} from "./catalog.js"
@@ -9,13 +8,14 @@ import {Gimbal} from "./parts/gimbal.js"
 import {PlayerId} from "../simulation/types.js"
 import {AnyCanvas} from "../../lib/buddy/types.js"
 import {RenderClock} from "./parts/render-clock.js"
+import { GameEntitiesReadonly } from "../simulation/parts/entitites.js"
 
 export type Realm = Awaited<ReturnType<typeof makeRealm>>
 
 export async function makeRealm(options: {
 		canvas: AnyCanvas
-		playerId: PlayerId,
-		entities: EntitiesReadonly,
+		playerId: PlayerId
+		entities: GameEntitiesReadonly
 		catalog: Catalog
 	}) {
 

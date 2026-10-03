@@ -1,8 +1,8 @@
 
-import {Worldspace2} from "../../coords/worldspace.js"
+import {Vec2} from "@benev/math"
 
 export type LandscapeParams = {
 	seed: number
-	size: Worldspace2
+	size: Vec2
 }
 

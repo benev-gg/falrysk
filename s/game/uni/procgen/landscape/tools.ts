@@ -8,19 +8,19 @@ import {makeNoise} from "../../../../lib/tools/rand.js"
 export class LandscapeTools {
 	static fn = <P extends any[], R>(fn: (tools: LandscapeTools, ...p: P) => R) => fn
 
-	#params
+	#size
 	#noise
 
 	constructor(params: LandscapeParams) {
-		this.#params = params
+		this.#size = params.size
 		this.#noise = makeNoise("landscape.noise", params.seed)
 	}
 
 	get size() {
-		return this.#params.size
+		return this.#size
 	}
 
-	percent = (p: number) => (p / 100) * this.#params.size.x
+	percent = (p: number) => (p / 100) * this.#size.x
 
 	sample = (w: Worldspace2, scale: number, offset = 0) =>
 		this.#noise(w.x + offset, w.y + offset, 1 / scale)

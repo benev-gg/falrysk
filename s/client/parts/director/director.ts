@@ -12,6 +12,7 @@ import {syncFreshSeats} from "./utils/sync-fresh-seats.js"
 import {syncStaleSeats} from "./utils/sync-stale-seats.js"
 import {Simulation} from "../../../game/simulation/simulation.js"
 import {allProjectorsReady} from "./utils/all-projectors-ready.js"
+import {initializeSimulation} from "../../../game/simulation/initialize.js"
 
 export async function makeDirector(basis: Basis): Promise<Director> {
 	const dispose = disposer()
@@ -20,6 +21,9 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 	const entities = simulation.entities.readonly
 	const players = new LocalPlayers()
 	const $playing = signal(false)
+
+	// init
+	initializeSimulation(simulation)
 
 	// start running the simulation
 	dispose.schedule(

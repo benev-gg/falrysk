@@ -1,6 +1,7 @@
 
 import {Quat, Vec2, Vec3, Vec4} from "@benev/math"
-import {asComponent, vec2, vec3, vec4} from "@benev/archimedes"
+import {LandscapeParams} from "../../uni/procgen/landscape/types.js"
+import {asComponent, tuple, u32, vec2, vec3, vec4} from "@benev/archimedes"
 
 export const bvec2 = asComponent<Vec2>({
 	size: vec2.size,
@@ -29,4 +30,19 @@ export const bquat = asComponent<Quat>({
 	read: bytes => Quat.from(vec4.read(bytes)),
 	write: (bytes, value) => vec4.write(bytes, value.array()),
 })
+
+export const cLandscape = (() => {
+	const data = tuple(u32, bvec2)
+	return asComponent<LandscapeParams>({
+		size: data.size,
+		version: data.version,
+		read: bytes => {
+			const [seed, size] = data.read(bytes)
+			return {seed, size}
+		},
+		write: (bytes, {seed, size}) => {
+			data.write(bytes, [seed, size])
+		},
+	})
+})()
 
