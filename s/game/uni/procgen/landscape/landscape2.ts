@@ -43,7 +43,7 @@ export function makeLandscape(params: LandscapeParams) {
 				: reliefHeight * landform
 		)
 
-		const mountainous = clamp(relief * landform)
+		const mountainous = clamp(relief * land)
 		const bigWarp = lsBigWarp(tools, w, .5)
 
 		const mountains = mountainous * (
