@@ -8,7 +8,7 @@ const reliefOffset = hash32("ls.relief")
 const inlandyOffset = hash32("ls.inlandy")
 
 export const lsRelief = LandscapeTools.fn((tools, w: Worldspace2) => {
-	return tools.sample(w, tools.percent(25), reliefOffset)
+	return tools.sample(w, 10_000, reliefOffset)
 })
 
 export const lsBathymetry = LandscapeTools.fn(

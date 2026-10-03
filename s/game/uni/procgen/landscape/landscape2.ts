@@ -43,7 +43,7 @@ export function makeLandscape(params: LandscapeParams) {
 				: reliefHeight * landform
 		)
 
-		const mountainous = clamp(relief * land)
+		const mountainous = clamp(relief * landform)
 		const bigWarp = lsBigWarp(tools, w, .5)
 
 		const mountains = mountainous * (
@@ -58,9 +58,9 @@ export function makeLandscape(params: LandscapeParams) {
 	function getDebugColor(w: Worldspace2) {
 		return debugColor.set_(1, 1, 1, 1)
 
-		const relief = lsRelief(tools, w)
-		const x = invert(relief)
-		return debugColor.set_(1, x, x, 1)
+		// const relief = lsRelief(tools, w)
+		// const x = invert(relief)
+		// return debugColor.set_(1, x, x, 1)
 
 		// const bedrock = lsBedrock(tools, w)
 		// const relief = lsRelief(tools, w)
