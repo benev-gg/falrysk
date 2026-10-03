@@ -1,12 +1,13 @@
 
-import {lerp, Vec4} from "@benev/math"
-import {lsBedrock} from "./ls/bedrock.js"
+import {clamp, invert, lerp, Vec4} from "@benev/math"
 import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
 import {lsMountains} from "./ls/mountains.js"
 import {Worldspace2} from "../../coords/worldspace.js"
 import {makeRand} from "../../../../lib/tools/rand.js"
 import {lsBathymetry, lsLand, lsLandform, lsRelief} from "./ls/landform.js"
+import { lsBigWarp, lsSmallWarp } from "./ls/warps.js"
+import { pipe } from "@e280/stz"
 
 export type Landscape = ReturnType<typeof makeLandscape>
 
@@ -18,13 +19,19 @@ export function makeLandscape(params: LandscapeParams) {
 	const rand = makeRand("landscape.rand", params.seed)
 	const shorelift = 1 // meters
 	const seafloor = -500 // meters
-	const basementHeight = 500 // meters
-	const mountainHeight = 2500 // meters
+	const basementHeight = 1000 // meters
+	const mountainHeight = 2000 // meters
 
 	const sealevel = rand.range(.3, .6) // noul along bedrock gradient
 
 	function getElevation(w: Worldspace2) {
-		const bedrock = lsBedrock(tools, w)
+		const fullWarp = pipe(w)
+			.to(w => lsSmallWarp(tools, w, .5))
+			.to(w => lsBigWarp(tools, w, .7))
+			.to(w => lsSmallWarp(tools, w, .5))
+			.done()
+
+		const bedrock = tools.radialGradient(fullWarp)
 		const relief = lsRelief(tools, w)
 		const reliefHeight = lerp(relief, basementHeight / 10, basementHeight)
 		const land = lsLand(tools, bedrock, sealevel)
@@ -32,18 +39,28 @@ export function makeLandscape(params: LandscapeParams) {
 
 		const basement = shorelift + (
 			(bedrock < sealevel)
-				? lsBathymetry(tools, bedrock, sealevel, seafloor)
+				? lsBathymetry(tools, bedrock, sealevel, seafloor - shorelift)
 				: reliefHeight * landform
 		)
 
-		const mountainous = relief * landform
-		const mountains = mountainHeight * lsMountains(tools, w, mountainous)
+		const mountainous = clamp(relief * land)
+		const bigWarp = lsBigWarp(tools, w, .5)
+
+		const mountains = mountainous * (
+			(mountainous === 0)
+				? 0
+				: mountainHeight * lsMountains(tools, bigWarp, w)
+		)
 
 		return basement + mountains
 	}
 
 	function getDebugColor(w: Worldspace2) {
 		return debugColor.set_(1, 1, 1, 1)
+
+		const relief = lsRelief(tools, w)
+		const x = invert(relief)
+		return debugColor.set_(1, x, x, 1)
 
 		// const bedrock = lsBedrock(tools, w)
 		// const relief = lsRelief(tools, w)

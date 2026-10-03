@@ -25,10 +25,10 @@ export const lsLand = LandscapeTools.fn(
 
 export const lsLandform = LandscapeTools.fn(
 	(tools, w: Worldspace2, land: number) => {
-		const inlandy = tools.sample(w, tools.percent(25), inlandyOffset) ** 3
+		const cliffsy = tools.sample(w, 10_000, inlandyOffset) ** 3
 		return smoothly(land, [
 			0,
-			lerp(inlandy, .1, .9),
+			lerp(cliffsy, .1, .9),
 			1,
 		])
 	}
