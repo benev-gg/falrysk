@@ -24,8 +24,8 @@ export async function setupScene(realm: Realm) {
 	const water = makeMaterial(.1, .2, .5, .8)
 
 	realm.gimbal.position = middle
-	realm.gimbal.radius = 30_000
-	realm.gimbal.pitch = degrees(-10)
+	realm.gimbal.radius = 35_000
+	realm.gimbal.pitch = degrees(-15)
 	realm.gimbal.camera.fov = degrees(60)
 	realm.gimbal.camera.nearPlane = 10
 	realm.gimbal.camera.farPlane = 100_000

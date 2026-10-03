@@ -4,7 +4,7 @@ import {LandscapeTools} from "../tools.js"
 import {makeHasher} from "../utils/hasher.js"
 import {Worldspace2} from "../../../coords/worldspace.js"
 
-const spline = [0, 1, 1, 1]
+const spline = [0, .9, 1]
 const hasher = makeHasher("warps")
 
 export const lsSmallWarp = LandscapeTools.fn(

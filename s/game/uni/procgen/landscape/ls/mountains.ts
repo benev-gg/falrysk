@@ -13,20 +13,20 @@ export const lsMountains = LandscapeTools.fn(
 		const r1 = ridge(sample(warped, 10_000, hasher("r1")))
 		const r2 = ridge(sample(unwarped, 3_000, hasher("r2")))
 		const ridges = (
-			(r1 * .8) +
-			(r2 * .2)
+			(r1 * .7) +
+			(r2 * .3)
 		)
 
-		const damagedRegion = sample(unwarped, 3_000, hasher("dmg")) ** 2
-		const cuts = sample(unwarped, 1_200, hasher("cuts")) ** 2
-		const chips = sample(unwarped, 250, hasher("chips")) ** 2
+		const damagedRegion = sample(unwarped, 5_000, hasher("dmg"))
+		const cuts = sample(unwarped, 1_200, hasher("cuts"))
+		const chips = sample(unwarped, 250, hasher("chips"))
 
 		const damagePoints = invert(
 			(cuts * .4) +
 			(chips * .15)
 		)
 		const damage = lerp(
-			damagedRegion * ridges,
+			damagedRegion ** 2,
 			1,
 			damagePoints,
 		)

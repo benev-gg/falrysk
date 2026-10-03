@@ -21,6 +21,11 @@ export function makeTerrain(options: {
 	const stats = {land: 0, highest: 0, lowest: 0}
 	const vertexCount = resolution.x * resolution.y
 
+	const size = landscape.getSize()
+	const squareMeters = size.x * size.y
+	const cellCount = resolution.x * resolution.y
+	const cellArea = squareMeters / cellCount
+
 	// vertex position
 	const positions = new Float32Array(vertexCount * 3)
 	{
@@ -39,7 +44,7 @@ export function makeTerrain(options: {
 
 			const elevation = landscape.getElevation(coord)
 			{
-				if (elevation > 0) stats.land++
+				if (elevation > 0) stats.land += cellArea
 				if (elevation < stats.lowest) stats.lowest = elevation
 				if (elevation > stats.highest) stats.highest = elevation
 			}
@@ -147,12 +152,10 @@ export function makeTerrain(options: {
 
 	mesh.material = material
 
-	const size = landscape.getSize()
-	const worldMeters2 = size.x * size.y
-	const landFraction = stats.land / worldMeters2
-	const landMeters2 = landFraction * worldMeters2
+	const landFraction = stats.land / squareMeters
+	const landMeters2 = landFraction * squareMeters
 	const landKm2 = landMeters2 / 1_000_000
-	const worldKm2 = worldMeters2 / 1_000_000
+	const worldKm2 = squareMeters / 1_000_000
 	const oceanKm2 = worldKm2 - landKm2
 
 	console.log(`makeTerrain ${(performance.now() - timeStart).toFixed(1)}ms`)

@@ -18,7 +18,7 @@ export function makeLandscape(params: LandscapeParams) {
 	const rand = makeRand("landscape.rand", params.seed)
 	const shorelift = 10 // meters
 	const seafloor = -1000 // meters
-	const basementHeight = 1000 // meters
+	const basementHeight = 2000 // meters
 	const mountainHeight = 2000 // meters
 
 	const sealevel = rand.range(.3, .6) // noul along bedrock gradient
@@ -42,8 +42,8 @@ export function makeLandscape(params: LandscapeParams) {
 				: reliefHeight * landform
 		)
 
-		const mountainous = clamp(relief * land)
-		const bigWarp = lsBigWarp(tools, w, .5)
+		const mountainous = clamp(relief * land) ** 2
+		const bigWarp = lsBigWarp(tools, w, .7)
 
 		const mountains = mountainous * (
 			(mountainous === 0)
