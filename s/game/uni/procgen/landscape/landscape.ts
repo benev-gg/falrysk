@@ -12,7 +12,6 @@ import {lsBathymetry, lsLand, lsLandform, lsRelief} from "./ls/landform.js"
 export type Landscape = ReturnType<typeof makeLandscape>
 
 export function makeLandscape(params: LandscapeParams) {
-	const timeStart = performance.now()
 	const debugColor = new Vec4(1, 1, 1, 1)
 	const tools = new LandscapeTools(params)
 
@@ -70,8 +69,6 @@ export function makeLandscape(params: LandscapeParams) {
 		// const x = invert(mountainous)
 		// return debugColor.set_(1, x, x, 1)
 	}
-
-	console.log(`makeLandscape ${(performance.now() - timeStart).toFixed(1)}ms`)
 
 	return {
 		getElevation,

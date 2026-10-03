@@ -18,6 +18,7 @@ export function makeTerrain(options: {
 	const timeStart = performance.now()
 	const {engine, material, rect, landscape, resolution} = options
 
+	const stats = {land: 0, highest: 0, lowest: 0}
 	const vertexCount = resolution.x * resolution.y
 
 	// vertex position
@@ -36,8 +37,15 @@ export function makeTerrain(options: {
 				.mul(rect.size())
 				.add(rect.min)
 
+			const elevation = landscape.getElevation(coord)
+			{
+				if (elevation > 0) stats.land++
+				if (elevation < stats.lowest) stats.lowest = elevation
+				if (elevation > stats.highest) stats.highest = elevation
+			}
+
 			const position = coord
-				.addZ(landscape.getElevation(coord))
+				.addZ(elevation)
 				.toBabylon()
 
 			positions.set([position.x, position.y, position.z], offset)
@@ -139,7 +147,20 @@ export function makeTerrain(options: {
 
 	mesh.material = material
 
+	const size = landscape.getSize()
+	const worldMeters2 = size.x * size.y
+	const landFraction = stats.land / worldMeters2
+	const landMeters2 = landFraction * worldMeters2
+	const landKm2 = landMeters2 / 1_000_000
+	const worldKm2 = worldMeters2 / 1_000_000
+	const oceanKm2 = worldKm2 - landKm2
+
 	console.log(`makeTerrain ${(performance.now() - timeStart).toFixed(1)}ms`)
+	console.log(` - land    ${landKm2.toFixed(0)}km²`)
+	console.log(` - sea     ${oceanKm2.toFixed(0)}km²`)
+	console.log(` - lowest  ${stats.lowest.toFixed(0)}m`)
+	console.log(` - highest ${stats.highest.toFixed(0)}m`)
+
 	return mesh
 }
 
