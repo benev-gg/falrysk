@@ -1,5 +1,5 @@
 
-import {clamp, invert, lerp, Vec4} from "@benev/math"
+import {clamp, invert, lerp, remap, smoothly, Vec4} from "@benev/math"
 import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
 import {lsMountains} from "./ls/mountains.js"
@@ -35,35 +35,43 @@ export function makeLandscape(params: LandscapeParams) {
 		}
 	}
 
-	function sample(wOriginal: Worldspace2, output: SampleOutput) {
-		wBigWarp.set(wOriginal)
-		lsBigWarp(tools, wBigWarp, .7)
+	const highlandSpline = [0, 0.5, 1]
 
+	function sample(wOriginal: Worldspace2, output: SampleOutput) {
 		wFullWarp.set(wOriginal)
 		lsSmallWarp(tools, wFullWarp, 0.5)
 		lsBigWarp(tools, wFullWarp, 0.7)
 		lsSmallWarp(tools, wFullWarp, 0.5)
 
 		const bedrock = tools.radialGradient(wFullWarp)
+
+		if (bedrock < sealevel) {
+			output.elevation =
+				shorelift +
+				lsBathymetry(tools, bedrock, sealevel, seafloor - shorelift)
+
+			output.color.set_(1, 1, 1, 1)
+			return
+		}
+
 		const relief = lsRelief(tools, wOriginal)
-		const reliefHeight = lerp(relief, basementHeight / 10, basementHeight)
 		const land = lsLand(tools, bedrock, sealevel)
 		const landform = lsLandform(tools, wOriginal, land)
 
-		const basement = shorelift + (
-			(bedrock < sealevel)
-				? lsBathymetry(tools, bedrock, sealevel, seafloor - shorelift)
-				: reliefHeight * landform
-		)
+		const basement =
+			shorelift +
+			lerp(relief, basementHeight / 10, basementHeight) * landform
 
-		const mountainous = clamp(relief * land) ** 2
+		const highlands = tools.sample(wOriginal, 30_000)
+		highlandSpline[1] = remap(highlands, .1, .9)
+		const mountainous = smoothly(clamp(relief * land), highlandSpline)
 
-		const mountains = mountainous * (
-			(mountainous === 0)
-				? 0
-				: mountainHeight * lsMountains(tools, wBigWarp, wOriginal)
-		)
-
+		const mountains = mountainous === 0
+			? 0
+			: mountainHeight * mountainous * (
+				lsMountains(tools, lsBigWarp(tools, wBigWarp.set(wOriginal), .7), wOriginal)
+			)
+		
 		const x = invert(mountainous)
 		output.elevation = basement + mountains
 		output.color.set_(1, x, x, 1)
