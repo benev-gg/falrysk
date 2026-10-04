@@ -20,7 +20,7 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 	const simulation = new Simulation()
 	const entities = simulation.entities.readonly
 	const players = new LocalPlayers()
-	const $playing = signal(false)
+	const $playing = signal(true)
 
 	// init
 	initializeSimulation(simulation)

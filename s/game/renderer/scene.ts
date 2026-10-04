@@ -1,5 +1,4 @@
 
-import {degrees} from "@benev/math"
 import {addToScene, createHemisphericLight, enableStandardVertexColors, registerScene} from "@babylonjs/lite"
 
 import {Realm} from "./realm.js"
@@ -22,13 +21,6 @@ export async function setupScene(realm: Realm) {
 	const size = Worldspace2.all(consts.world.size)
 	const middle = size.dup().divBy(2).addZ()
 	const water = makeMaterial(.1, .2, .5, .8)
-
-	realm.gimbal.position = middle
-	realm.gimbal.radius = 35_000
-	realm.gimbal.pitch = degrees(-15)
-	realm.gimbal.camera.fov = degrees(60)
-	realm.gimbal.camera.nearPlane = 10
-	realm.gimbal.camera.farPlane = 100_000
 
 	const sea = makeSea(engine, water, consts.world.size)
 	sea.position.copyFrom(middle.toBabylon())
