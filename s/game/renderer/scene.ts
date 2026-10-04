@@ -18,17 +18,13 @@ export async function setupScene(realm: Realm) {
 
 	scene.camera = realm.gimbal.camera
 	
-	const size = Worldspace2.all(consts.world.size)
+	const size = Worldspace2.fill(consts.world.size)
 	const middle = size.dup().divBy(2).addZ()
 	const water = makeMaterial(.1, .2, .5, .8)
 
 	const sea = makeSea(engine, water, consts.world.size)
-	sea.position.copyFrom(middle.toBabylon())
+	sea.position.copyFrom(middle.babylonify())
 	addToScene(scene, sea)
-
-	// const box = makeBox(engine, 10, material)
-	// box.position.copyFrom(middle.toBabylon())
-	// addToScene(scene, box)
 
 	await registerScene(scene)
 }

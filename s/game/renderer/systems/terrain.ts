@@ -22,7 +22,7 @@ export const terrain_rendering = (realm: Realm) => lifecycle(
 			engine,
 			material,
 			landscape: makeLandscape(entity.landscape),
-			resolution: Vec2.all(consts.world.resolution),
+			resolution: Vec2.fill(consts.world.resolution),
 			rect: new Rect(Worldspace2.zero(), entity.landscape.size),
 		}))
 

@@ -1,5 +1,4 @@
 
-import {Vec3 as BabVec3} from "@babylonjs/lite"
 import {clamp, Vec2, Vec3, Xyz} from "@benev/math"
 
 export class Worldspace2 extends Vec2 {
@@ -21,13 +20,7 @@ export class Worldspace3 extends Vec3 {
 	}
 
 	unbabylonify() {
-		// it's actually just flipping y and z
-		return this.babylonify()
-	}
-
-	toBabylon(): BabVec3 {
-		const {x, y, z} = this
-		return {x, y: z, z: y}
+		return this.babylonify() // reversible
 	}
 
 	/** given that this worldspace is a normal, calculate the steepness */

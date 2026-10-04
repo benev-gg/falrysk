@@ -1,13 +1,13 @@
 
-import {Rect, Tuple2, Vec2} from "@benev/math"
+import {Rect, Vec2, XyArray} from "@benev/math"
 
 export function selrect(components: {
-		position: Tuple2,
+		position: XyArray,
 		reach: number,
 		rotation: number,
 	}) {
 
-	const extent = Vec2.all(components.reach)
+	const extent = Vec2.fill(components.reach)
 
 	const center = new Vec2()
 		.from(components.position)

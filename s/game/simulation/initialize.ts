@@ -9,7 +9,7 @@ export function initializeSimulation(simulation: Simulation) {
 	simulation.entities.set(makeId(), {
 		landscape: {
 			seed: rand32(),
-			size: Vec2.all(consts.world.size),
+			size: Vec2.fill(consts.world.size),
 		},
 	})
 }

@@ -12,8 +12,8 @@ export class Gimbal {
 
 	constructor() {
 		this.camera = createFreeCamera(
-			new Worldspace3(0, 0, 0).toBabylon(),
-			new Worldspace3(0, 1, 0).toBabylon(),
+			new Worldspace3(0, 0, 0).babylonify(),
+			new Worldspace3(0, 1, 0).babylonify(),
 		)
 	}
 
@@ -21,11 +21,11 @@ export class Gimbal {
 		const forward = this.#forward()
 
 		this.camera.position.copyFrom(
-			this.position.dup().sub(forward.dup().mulBy(this.radius)).toBabylon()
+			this.position.dup().sub(forward.dup().mulBy(this.radius)).babylonify()
 		)
 
 		this.camera.target.copyFrom(
-			this.position.dup().add(forward).toBabylon()
+			this.position.dup().add(forward).babylonify()
 		)
 	}
 
