@@ -31,7 +31,7 @@ export const bquat = asComponent<Quat>({
 	write: (bytes, value) => vec4.write(bytes, value.array()),
 })
 
-export const cLandscape = (() => {
+export const landscape = (() => {
 	const data = tuple(u32, bvec2)
 	return asComponent<LandscapeParams>({
 		size: data.size,
