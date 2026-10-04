@@ -1,10 +1,10 @@
 
 import {count2d} from "@e280/stz"
-import {Rect, Vec2} from "@benev/math"
 import {makeId} from "@benev/archimedes"
+import {Rect, Vec2, XyzArray, XyzwArray} from "@benev/math"
 import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
-import {Worldspace2} from "../../uni/coords/worldspace.js"
+import {Worldspace2, Worldspace3} from "../../uni/coords/worldspace.js"
 import {Landscape} from "../../uni/procgen/landscape/landscape.js"
 
 export function makeTerrain(options: {
@@ -18,6 +18,8 @@ export function makeTerrain(options: {
 	const timeStart = performance.now()
 	const {engine, material, rect, landscape, resolution} = options
 
+	const landscapeSample = landscape.makeSampleOutput()
+
 	const stats = {land: 0, highest: 0, lowest: 0}
 	const vertexCount = resolution.x * resolution.y
 
@@ -25,35 +27,54 @@ export function makeTerrain(options: {
 	const squareMeters = size.x * size.y
 	const cellCount = resolution.x * resolution.y
 	const cellArea = squareMeters / cellCount
+	const resLessOne = resolution.dup().sub_(1, 1)
 
-	// vertex position
+	// vertex positions and colors
 	const positions = new Float32Array(vertexCount * 3)
+	const colors = new Float32Array(vertexCount * 4)
 	{
 		const coord = new Worldspace2()
+		const position = new Worldspace3()
+		const positionArray: XyzArray = [0, 0, 0]
+		const colorArray: XyzwArray = [0, 0, 0, 1]
 
 		let index = 0
 		for (const [column, row] of count2d(resolution.array())) {
 			const i = index++
-			const offset = i * 3
+			const positionOffset = i * 3
+			const colorOffset = i * 4
 
 			coord
 				.set_(column, row)
-				.div(resolution.dup().sub_(1, 1))
+				.div(resLessOne)
 				.mul(rect.size())
 				.add(rect.min)
 
-			const elevation = landscape.getElevation(coord)
+			// perform sampling
+			landscape.sample(coord, landscapeSample)
+
+			const {elevation, color} = landscapeSample
 			{
 				if (elevation > 0) stats.land += cellArea
 				if (elevation < stats.lowest) stats.lowest = elevation
 				if (elevation > stats.highest) stats.highest = elevation
 			}
 
-			const position = coord
-				.addZ(elevation)
-				.toBabylon()
+			position
+				.set_(coord.x, coord.y, elevation)
+				.babylonify()
 
-			positions.set([position.x, position.y, position.z], offset)
+			positionArray[0] = position.x
+			positionArray[1] = position.y
+			positionArray[2] = position.z
+
+			colorArray[0] = color.x
+			colorArray[1] = color.y
+			colorArray[2] = color.z
+			colorArray[3] = color.w
+
+			positions.set(positionArray, positionOffset)
+			colors.set(colorArray, colorOffset)
 		}
 	}
 
@@ -112,29 +133,6 @@ export function makeTerrain(options: {
 				indices[index++] = d
 				indices[index++] = c
 			}
-		}
-	}
-
-	// colors
-	const colors = new Float32Array(vertexCount * 4)
-	{
-		const coord = new Worldspace2()
-
-		let index = 0
-		for (const [column, row] of count2d(resolution.array())) {
-			const i = index++
-			const offset = i * 4
-
-			coord
-				.set_(column, row)
-				.div(resolution.dup().sub_(1, 1))
-				.mul(rect.size())
-				.add(rect.min)
-
-			const debugColor = landscape
-				.getDebugColor(coord)
-
-			colors.set(debugColor.array(), offset)
 		}
 	}
 

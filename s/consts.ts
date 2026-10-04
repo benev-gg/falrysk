@@ -3,7 +3,7 @@ import {deep} from "@e280/stz"
 
 export const consts = deep.freeze({
 	world: {
-		resolution: 768,
+		resolution: 1024,
 		size: 65_536,
 		// size: 32_768,
 		// size: 4_096,

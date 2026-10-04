@@ -13,6 +13,18 @@ export class Worldspace3 extends Vec3 {
 		return new this(v.x, v.z, v.y)
 	}
 
+	babylonify() {
+		const {y, z} = this
+		this.y = z
+		this.z = y
+		return this
+	}
+
+	unbabylonify() {
+		// it's actually just flipping y and z
+		return this.babylonify()
+	}
+
 	toBabylon(): BabVec3 {
 		const {x, y, z} = this
 		return {x, y: z, z: y}

@@ -11,7 +11,6 @@ export const lsSmallWarp = LandscapeTools.fn(
 	(tools, w: Worldspace2, power: number, seed = hasher("base")) => {
 		const {warp} = tools
 
-		w = w.dup()
 		const mask = power * smoothly(tools.radialGradient(w), spline)
 		const strength = mask * clamp(remap(tools.sample(w, 15_000, hasher("smallchaos") + seed), 0, 0.5))
 
@@ -27,7 +26,6 @@ export const lsBigWarp = LandscapeTools.fn(
 	(tools, w: Worldspace2, power: number, seed = hasher("base")) => {
 		const {warp, percent} = tools
 
-		w = w.dup()
 		const mask = power * smoothly(tools.radialGradient(w), spline)
 		const chaos1 = mask * clamp(remap(tools.sample(w, 15_000, hasher("bigchaos1") + seed), 0, 0.5))
 		const chaos2 = mask * clamp(remap(tools.sample(w, 15_000, hasher("bigchaos2") + seed), 0, 0.5))
