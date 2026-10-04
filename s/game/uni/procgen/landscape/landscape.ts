@@ -72,9 +72,10 @@ export function makeLandscape(params: LandscapeParams) {
 				lsMountains(tools, lsBigWarp(tools, wBigWarp.set(wOriginal), .7), wOriginal)
 			)
 		
-		const x = invert(mountainous)
 		output.elevation = basement + mountains
-		output.color.set_(1, x, x, 1)
+
+		// const x = invert(mountainous)
+		output.color.set_(1, 1, 1, 1)
 	}
 
 	return {
