@@ -3,7 +3,7 @@ import {gotOk} from "@e280/stz"
 import {signal, wait} from "@e280/strata"
 import {EntitiesReadonly} from "@benev/archimedes"
 
-import {Seat} from "../types.js"
+import {OnChanges, Seat} from "../types.js"
 import {makeProjector} from "./make-projector.js"
 import {PlayerId} from "../../../../game/simulation/types.js"
 import {Catalog, makeCatalog} from "../../../../game/renderer/catalog.js"
@@ -11,11 +11,12 @@ import {Catalog, makeCatalog} from "../../../../game/renderer/catalog.js"
 export function makeSeat(
 		playerId: PlayerId,
 		entities: EntitiesReadonly,
+		onChanges: OnChanges,
 	): Seat {
 
 	const mkProjector = async(overrideCatalog?: Catalog) => {
 		const catalog = overrideCatalog ?? await makeCatalog()
-		return makeProjector(playerId, catalog, entities)
+		return makeProjector(playerId, catalog, entities, onChanges)
 	}
 
 	const $wait = signal(wait(mkProjector()))

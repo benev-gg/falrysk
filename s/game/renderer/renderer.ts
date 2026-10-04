@@ -26,9 +26,7 @@ export function setupRenderer(): RendererFns {
 
 	return {
 		async initialize(options) {
-
 			const {canvas, playerId, dimensions, catalog} = options
-
 			const $resize = signal<Vec2 | null>(Vec2.from(dimensions))
 
 			const entities = makeEntities()
@@ -68,6 +66,11 @@ export function setupRenderer(): RendererFns {
 		async setRenderSize(x: number, y: number) {
 			const venue = await ready
 			venue.$resize(new Vec2(x, y))
+		},
+
+		async applyChanges(changes) {
+			const {entities} = await ready
+			entities.applyChanges(changes)
 		},
 	}
 }

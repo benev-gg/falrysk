@@ -1,6 +1,6 @@
 
 import {makeId} from "@benev/archimedes"
-import {degrees, Vec2} from "@benev/math"
+import {Vec2} from "@benev/math"
 import {Pod} from "../parts/pod.js"
 
 export const spawn_spectator = (pod: Pod) => () => {
@@ -14,7 +14,7 @@ export const spawn_spectator = (pod: Pod) => () => {
 				console.log("spawn spectator")
 				pod.entities.set(makeId(), {
 					controlledBy: id,
-					gimbal: new Vec2(0, degrees(90)),
+					gimbal: new Vec2(),
 				})
 			}
 		}

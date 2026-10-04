@@ -1,4 +1,5 @@
 
+import {Sub} from "@e280/stz"
 import {RMap, Signal, Wait} from "@e280/strata"
 import {WorkerConnection} from "@e280/renraku/web"
 
@@ -8,6 +9,7 @@ import {RendererFns} from "../../../game/renderer/types.js"
 import {Simulation} from "../../../game/simulation/simulation.js"
 
 export type Seats = RMap<PlayerId, Seat>
+export type OnChanges = Sub<[Uint8Array]>
 
 export type Director = {
 	$playing: Signal<boolean>

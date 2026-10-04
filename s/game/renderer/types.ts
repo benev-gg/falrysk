@@ -11,7 +11,7 @@ export type RendererFns = {
 		entitiesSnapshot: Uint8Array
 		dimensions: XyArray
 	}): Promise<void>
-
 	setRenderSize(x: number, y: number): Promise<void>
+	applyChanges(changes: Uint8Array): Promise<void>
 }
 

@@ -8,7 +8,7 @@ export const gimbal_update = (realm: Realm) => () => {
 	const {gimbal} = realm
 
 	const size = Worldspace2.all(consts.world.size)
-	const middle = size.dup().divBy(2).addZ()
+	const middle = size.dup().divBy(2).addZ(3000)
 
 	gimbal.position = middle
 	gimbal.radius = 35_000

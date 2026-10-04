@@ -1,5 +1,5 @@
 
-import {disposer} from "@e280/stz"
+import {disposer, sub} from "@e280/stz"
 import {gameloop} from "@benev/archimedes"
 import {effect, RMap, signal} from "@e280/strata"
 
@@ -21,6 +21,7 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 	const entities = simulation.entities.readonly
 	const players = new LocalPlayers()
 	const $playing = signal(true)
+	const onChanges = sub<[Uint8Array]>()
 
 	// init
 	initializeSimulation(simulation)
@@ -30,15 +31,19 @@ export async function makeDirector(basis: Basis): Promise<Director> {
 		gameloop(consts.simulationHz, async() => {
 			players.update(performance.now(), basis.deck.ports)
 
-			if ($playing())
+			if ($playing()) {
+				const recording = simulation.entities.startRecordingChanges()
 				simulation.simulate(players.actions)
+				const changes = recording.done()
+				onChanges.publish(changes)
+			}
 		}),
 	)
 
 	// ensure one projection per player
 	dispose.schedule(
 		effect(() => {
-			syncFreshSeats(players, seats, entities)
+			syncFreshSeats(players, seats, entities, onChanges)
 			syncStaleSeats(players, seats)
 		})
 	)
