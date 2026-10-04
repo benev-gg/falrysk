@@ -1,6 +1,7 @@
 
 import {createFreeCamera} from "@babylonjs/lite"
 import {Position} from "../../uni/units/position.js"
+import {angleNormalize, clamp, degrees} from "@benev/math"
 
 export class Gimbal {
 	readonly camera
@@ -18,6 +19,7 @@ export class Gimbal {
 	}
 
 	update() {
+		this.#constrain()
 		const forward = this.#forward()
 
 		this.camera.position.copyFrom(
@@ -29,10 +31,15 @@ export class Gimbal {
 		)
 	}
 
+	#constrain() {
+		const freedom = degrees(89.9)
+		this.yaw = angleNormalize(this.yaw)
+		this.pitch = clamp(this.pitch, -freedom, freedom)
+	}
+
 	#forward() {
 		const {yaw, pitch} = this
 		const cosPitch = Math.cos(pitch)
-
 		return new Position(
 			Math.sin(yaw) * cosPitch,
 			Math.cos(yaw) * cosPitch,

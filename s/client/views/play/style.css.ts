@@ -50,15 +50,23 @@ export default css`
 	}
 }
 
-canvas {
+.cockpit {
 	display: block;
-	position: relative;
+	position: absolute;
 	inset: 0;
 	width: 100%;
 	height: 100%;
 
-	&:focus {
-		outline: none;
+	canvas {
+		display: block;
+		position: relative;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+
+		&:focus {
+			outline: none;
+		}
 	}
 }
 

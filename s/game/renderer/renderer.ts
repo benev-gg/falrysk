@@ -68,6 +68,12 @@ export function setupRenderer(): RendererFns {
 			venue.$resize(new Vec2(x, y))
 		},
 
+		async updateAim(x: number, y: number) {
+			const {realm: {gimbal}} = await ready
+			gimbal.yaw = x
+			gimbal.pitch = y
+		},
+
 		async applyChanges(changes) {
 			const {entities} = await ready
 			entities.applyChanges(changes)

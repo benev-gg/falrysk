@@ -8,7 +8,7 @@ import {Gimbal} from "./parts/gimbal.js"
 import {PlayerId} from "../simulation/types.js"
 import {AnyCanvas} from "../../lib/buddy/types.js"
 import {RenderClock} from "./parts/render-clock.js"
-import { GameEntitiesReadonly } from "../simulation/parts/entitites.js"
+import {GameEntitiesReadonly} from "../simulation/parts/entitites.js"
 
 export type Realm = Awaited<ReturnType<typeof makeRealm>>
 
