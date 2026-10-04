@@ -2,11 +2,11 @@
 import {lerp, remap, smoothly} from "@benev/math"
 import {LandscapeTools} from "../tools.js"
 import {makeHasher} from "../utils/hasher.js"
-import {Worldspace2} from "../../../coords/worldspace.js"
+import {Coordinates} from "../../../units/coordinates.js"
 
 const hasher = makeHasher("ls.landform")
 
-export const lsRelief = LandscapeTools.fn((tools, w: Worldspace2) => {
+export const lsRelief = LandscapeTools.fn((tools, w: Coordinates) => {
 	return tools.sample(w, 15_000, hasher("relief1"))
 })
 
@@ -39,7 +39,7 @@ const steps = [
 ]
 
 export const lsLandform = LandscapeTools.fn(
-	(tools, w: Worldspace2, land: number) => {
+	(tools, w: Coordinates, land: number) => {
 		const factor = tools.sample(w, 10_000, hasher("factor")) ** 2
 		const natty = land
 		const steppy = smoothly(land, steps)

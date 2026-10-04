@@ -2,13 +2,13 @@
 import {clamp, remap, smoothly} from "@benev/math"
 import {LandscapeTools} from "../tools.js"
 import {makeHasher} from "../utils/hasher.js"
-import {Worldspace2} from "../../../coords/worldspace.js"
+import {Coordinates} from "../../../units/coordinates.js"
 
 const spline = [0, .9, 1]
 const hasher = makeHasher("warps")
 
 export const lsSmallWarp = LandscapeTools.fn(
-	(tools, w: Worldspace2, power: number, seed = hasher("base")) => {
+	(tools, w: Coordinates, power: number, seed = hasher("base")) => {
 		const {warp} = tools
 
 		const mask = power * smoothly(tools.radialGradient(w), spline)
@@ -23,7 +23,7 @@ export const lsSmallWarp = LandscapeTools.fn(
 })
 
 export const lsBigWarp = LandscapeTools.fn(
-	(tools, w: Worldspace2, power: number, seed = hasher("base")) => {
+	(tools, w: Coordinates, power: number, seed = hasher("base")) => {
 		const {warp, percent} = tools
 
 		const mask = power * smoothly(tools.radialGradient(w), spline)

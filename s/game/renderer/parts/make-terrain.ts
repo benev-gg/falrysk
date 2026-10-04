@@ -4,7 +4,8 @@ import {makeId} from "@benev/archimedes"
 import {Rect, Vec2, XyzArray, XyzwArray} from "@benev/math"
 import {createMeshFromData, EngineContext, Material} from "@babylonjs/lite"
 
-import {Worldspace2, Worldspace3} from "../../uni/coords/worldspace.js"
+import {Position} from "../../uni/units/position.js"
+import {Coordinates} from "../../uni/units/coordinates.js"
 import {Landscape} from "../../uni/procgen/landscape/landscape.js"
 
 export function makeTerrain(options: {
@@ -33,8 +34,8 @@ export function makeTerrain(options: {
 	const positions = new Float32Array(vertexCount * 3)
 	const colors = new Float32Array(vertexCount * 4)
 	{
-		const coord = new Worldspace2()
-		const position = new Worldspace3()
+		const coord = new Coordinates()
+		const position = new Position()
 		const positionArray: XyzArray = [0, 0, 0]
 		const colorArray: XyzwArray = [0, 0, 0, 1]
 

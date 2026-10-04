@@ -4,7 +4,7 @@ import {LandscapeTools} from "./tools.js"
 import {LandscapeParams} from "./types.js"
 import {lsMountains} from "./ls/mountains.js"
 import {lsBigWarp, lsSmallWarp} from "./ls/warps.js"
-import {Worldspace2} from "../../coords/worldspace.js"
+import {Coordinates} from "../../units/coordinates.js"
 import {makeRand} from "../../../../lib/tools/rand.js"
 import {lsBathymetry, lsLand, lsLandform, lsRelief} from "./ls/landform.js"
 
@@ -20,8 +20,8 @@ export function makeLandscape(params: LandscapeParams) {
 	const mountainHeight = 2800 // meters
 	const sealevel = rand.range(.3, .6) // noul along bedrock gradient
 
-	const wBigWarp = Worldspace2.zero()
-	const wFullWarp = Worldspace2.zero()
+	const wBigWarp = Coordinates.zero()
+	const wFullWarp = Coordinates.zero()
 
 	type SampleOutput = {
 		elevation: number
@@ -37,7 +37,7 @@ export function makeLandscape(params: LandscapeParams) {
 
 	const highlandSpline = [0, 0.5, 1]
 
-	function sample(wOriginal: Worldspace2, output: SampleOutput) {
+	function sample(wOriginal: Coordinates, output: SampleOutput) {
 		wFullWarp.set(wOriginal)
 		lsSmallWarp(tools, wFullWarp, 0.5)
 		lsBigWarp(tools, wFullWarp, 0.7)

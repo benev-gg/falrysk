@@ -2,12 +2,12 @@
 import {degrees} from "@benev/math"
 import {Realm} from "../realm.js"
 import {consts} from "../../../consts.js"
-import {Worldspace2} from "../../uni/coords/worldspace.js"
+import {Coordinates} from "../../uni/units/coordinates.js"
 
 export const gimbal_update = (realm: Realm) => () => {
 	const {gimbal} = realm
 
-	const size = Worldspace2.fill(consts.world.size)
+	const size = Coordinates.fill(consts.world.size)
 	const middle = size.dup().divBy(2).addZ(3000)
 
 	gimbal.position = middle

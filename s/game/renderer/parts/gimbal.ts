@@ -1,6 +1,6 @@
 
 import {createFreeCamera} from "@babylonjs/lite"
-import {Worldspace3} from "../../uni/coords/worldspace.js"
+import {Position} from "../../uni/units/position.js"
 
 export class Gimbal {
 	readonly camera
@@ -8,12 +8,12 @@ export class Gimbal {
 	yaw = 0
 	pitch = 0
 	radius = 0
-	position = new Worldspace3()
+	position = new Position()
 
 	constructor() {
 		this.camera = createFreeCamera(
-			new Worldspace3(0, 0, 0).babylonify(),
-			new Worldspace3(0, 1, 0).babylonify(),
+			new Position(0, 0, 0).babylonify(),
+			new Position(0, 1, 0).babylonify(),
 		)
 	}
 
@@ -33,7 +33,7 @@ export class Gimbal {
 		const {yaw, pitch} = this
 		const cosPitch = Math.cos(pitch)
 
-		return new Worldspace3(
+		return new Position(
 			Math.sin(yaw) * cosPitch,
 			Math.cos(yaw) * cosPitch,
 			Math.sin(pitch),

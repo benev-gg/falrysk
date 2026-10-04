@@ -5,7 +5,7 @@ import {Realm} from "./realm.js"
 import {consts} from "../../consts.js"
 import {makeSea} from "./parts/make-sea.js"
 import {makeMaterial} from "./parts/make-material.js"
-import {Worldspace2} from "../uni/coords/worldspace.js"
+import {Coordinates} from "../uni/units/coordinates.js"
 
 enableStandardVertexColors()
 
@@ -18,7 +18,7 @@ export async function setupScene(realm: Realm) {
 
 	scene.camera = realm.gimbal.camera
 	
-	const size = Worldspace2.fill(consts.world.size)
+	const size = Coordinates.fill(consts.world.size)
 	const middle = size.dup().divBy(2).addZ()
 	const water = makeMaterial(.1, .2, .5, .8)
 

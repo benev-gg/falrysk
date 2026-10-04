@@ -7,7 +7,7 @@ import {Realm} from "../realm.js"
 import {consts} from "../../../consts.js"
 import {makeTerrain} from "../parts/make-terrain.js"
 import {makeMaterial} from "../parts/make-material.js"
-import {Worldspace2} from "../../uni/coords/worldspace.js"
+import {Coordinates} from "../../uni/units/coordinates.js"
 import {makeLandscape} from "../../uni/procgen/landscape/landscape.js"
 
 export const terrain_rendering = (realm: Realm) => lifecycle(
@@ -23,7 +23,7 @@ export const terrain_rendering = (realm: Realm) => lifecycle(
 			material,
 			landscape: makeLandscape(entity.landscape),
 			resolution: Vec2.fill(consts.world.resolution),
-			rect: new Rect(Worldspace2.zero(), entity.landscape.size),
+			rect: new Rect(Coordinates.zero(), entity.landscape.size),
 		}))
 
 		return {

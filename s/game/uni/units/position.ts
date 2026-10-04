@@ -1,13 +1,7 @@
 
-import {clamp, Vec2, Vec3, Xyz} from "@benev/math"
+import {clamp, Vec3, Xyz} from "@benev/math"
 
-export class Worldspace2 extends Vec2 {
-	addZ(z = 0) {
-		return new Worldspace3(this.x, this.y, z)
-	}
-}
-
-export class Worldspace3 extends Vec3 {
+export class Position extends Vec3 {
 	static fromBabylon(v: Xyz) {
 		return new this(v.x, v.z, v.y)
 	}

@@ -1,15 +1,14 @@
 
 import {invert, lerp, linearly} from "@benev/math"
-
 import {LandscapeTools} from "../tools.js"
 import {makeHasher} from "../utils/hasher.js"
-import {Worldspace2} from "../../../coords/worldspace.js"
+import {Coordinates} from "../../../units/coordinates.js"
 
 const hasher = makeHasher("mountains")
 const ridge = (x: number) => linearly(x, [0, 1, 0])
 
 export const lsMountains = LandscapeTools.fn(
-	({sample}, warped: Worldspace2, unwarped: Worldspace2) => {
+	({sample}, warped: Coordinates, unwarped: Coordinates) => {
 		const r1 = ridge(sample(warped, 10_000, hasher("r1")))
 		const r2 = ridge(sample(unwarped, 3_000, hasher("r2")))
 		const ridges = (
